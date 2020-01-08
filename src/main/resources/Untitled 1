@@ -1,0 +1,47 @@
+        ROOT(null,"Digitaal_Archief"),
+        
+            ALGEMEEN(ROOT, 0, "Algemeen"),
+                Archief(ALGEMEEN,1,"Archief"),
+                Divers(ALGEMEEN,2,"Divers"),
+                Geenidee(ALGEMEEN,99,"Geenidee"),
+                
+             FINANCIEEL(ROOT,1,"Financieel"),
+             	Rekening(FINANCIEEL,1,"Rekeningen"),
+             	Afschrift(FINANCIEEL,2,"Rekeningafschriften"),
+             	Salaris(FINANCIEEL,3,"Salarisspecificaties"),
+             	Declaratie(FINANCIEEL,4,"Declaraties"),
+             	Jaaropgaaf(FINANCIEEL,5,"Jaaropgaven"),
+             	Kateway(FINANCIEEL,8,"Kateway"),
+             	Irideos(FINANCIEEL,9,"Irideos"),
+             	
+             BON(ROOT,2,"Bonnen_Facturen_Garanties"),
+         
+             CONTRACT(ROOT,3,"Contracten_Overeenkomsten"),
+             
+             CORRESPONDENTIE(ROOT,4,"Correspondentie"),
+             	Inkomend(CORRESPONDENTIE,1,"Inkomend"),
+             	Uitgaand(CORRESPONDENTIE,2,"Uitgaand"),
+             	Iri_cor(CORRESPONDENTIE,3,"Irideos"),
+             	Kate_cor(CORRESPONDENTIE,4,"Kateway"),
+             	
+             BELASTING(ROOT,5,"Belastingen"),
+             	Belastingdienst(BELASTING,1,"Belastingdient"),
+             		Iri_bel(Belastingdienst,1,"Irideos"),
+             		Kate_bel(Belastingdienst,2,"Kateway"),
+             	Gemeente(BELASTING,2,"Gemeentebelastingen"),
+             	
+             MEDISCH(ROOT,6,"Medisch"),
+             
+             VERZEKERING(ROOT,7,"Verzekeringen"),
+             	Ziektekosten(VERZEKERING,1,"Ziektekosten"),
+             	Overig(VERZEKERING,2,"Overig"),
+             	
+             OFFICIEEL(ROOT,8,"Officiele_documenten"),
+             	Persoonlijk(OFFICIEEL,1,"Persoonlijk"),
+             	Akte(OFFICIEEL,2,"Akten_Uittreksels"),
+             	Zakelijk(OFFICIEEL,3,"Zakelijk"),
+             		Iri_zak(Zakelijk,1,"Irideos"),
+             		Kate_zak(Zakelijk,2,"Kateway"),
+             DIPLOMA(ROOT,1,"Diploma's_Certificaten")
+
+        ;
