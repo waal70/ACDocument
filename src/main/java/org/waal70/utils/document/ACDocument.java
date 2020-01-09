@@ -3,6 +3,7 @@
  */
 package org.waal70.utils.document;
 
+import java.awt.image.BufferedImage;
 import java.util.Calendar;
 
 import org.waal70.utils.document.Archive.DocumentType;
@@ -21,6 +22,18 @@ public class ACDocument extends GenericDocument {
 	 */
 	private static final long serialVersionUID = 1333036846405153112L;
 
+	//Just the filename. For scanFileName I expect IMG_001.pdf
+	//This is GenericDocument.path
+	//private String scanFileName;
+	// for targetFileName, I will construct 20201231_<Company>_<Subject>_<Recipient>.pdf
+	
+	private String targetFileName;
+	private String recipient;
+	private String senderCompany;
+	
+	// This is GenericDocument.created
+	// private Calendar scanDated; 
+	private Calendar targetDated;
 
 	
 	private String title = "";
@@ -29,6 +42,8 @@ public class ACDocument extends GenericDocument {
 	private String description = "";
 	private String language = "";
 	private Calendar lastModified;
+	
+	private BufferedImage preview;
 
 	public Calendar getLastModified() {
 		return lastModified;
@@ -44,6 +59,13 @@ public class ACDocument extends GenericDocument {
 
 	public void setLanguage(String language) {
 		this.language = language;
+	}
+	
+	public void setPreview(BufferedImage preview) {
+		this.preview = preview;
+	}
+	public BufferedImage getPreview() {
+		return preview;
 	}
 
 	public String getTitle() {
@@ -71,7 +93,7 @@ public class ACDocument extends GenericDocument {
 		sb.append(", description=").append(description);
 		sb.append(", author=").append(author);
 		sb.append(", permissions=").append(permissions);
-		sb.append(", created=").append(created == null ? null : created.getTime());
+		sb.append(", created=").append(created);
 		sb.append(", lastModified=").append(lastModified == null ? null : lastModified.getTime());
 		// sb.append(", keywords=").append(keywords);
 		// sb.append(", categories=").append(categories);
@@ -98,5 +120,61 @@ public class ACDocument extends GenericDocument {
 	 */
 	public void setDoctype(DocumentType doctype) {
 		this.doctype = doctype;
+	}
+
+	/**
+	 * @return the targetFileName
+	 */
+	public String getTargetFileName() {
+		return targetFileName;
+	}
+
+	/**
+	 * @param targetFileName the targetFileName to set
+	 */
+	public void setTargetFileName(String targetFileName) {
+		this.targetFileName = targetFileName;
+	}
+
+	/**
+	 * @return the senderCompany
+	 */
+	public String getSenderCompany() {
+		return senderCompany;
+	}
+
+	/**
+	 * @param senderCompany the senderCompany to set
+	 */
+	public void setSenderCompany(String senderCompany) {
+		this.senderCompany = senderCompany;
+	}
+
+	/**
+	 * @return the recipient
+	 */
+	public String getRecipient() {
+		return recipient;
+	}
+
+	/**
+	 * @param recipient the recipient to set
+	 */
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
+	}
+
+	/**
+	 * @return the targetDated
+	 */
+	public Calendar getTargetDated() {
+		return targetDated;
+	}
+
+	/**
+	 * @param targetDated the targetDated to set
+	 */
+	public void setTargetDated(Calendar targetDated) {
+		this.targetDated = targetDated;
 	}
 }

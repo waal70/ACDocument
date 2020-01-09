@@ -14,7 +14,7 @@ public class GenericDocument implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	protected Calendar created;
+	protected long created = 0;
 	protected String path;
 	protected String author;
 	protected int permissions;
@@ -25,11 +25,11 @@ public class GenericDocument implements Serializable {
 	//protected Set<Folder> categories = new HashSet<Folder>();
 	//protected List<Note> notes = new ArrayList<Note>();
 
-	public Calendar getCreated() {
+	public long getCreated() {
 		return created;
 	}
 
-	public void setCreated(Calendar created) {
+	public void setCreated(long created) {
 		this.created = created;
 	}
 
@@ -110,7 +110,7 @@ public class GenericDocument implements Serializable {
 		sb.append("{");
 		sb.append("path=").append(path);
 		sb.append(", permissions=").append(permissions);
-		sb.append(", created=").append(created == null ? null : created.getTime());
+		sb.append(", created=").append(created);
 		sb.append(", subscribed=").append(subscribed);
 	//	sb.append(", subscriptors=").append(subscriptors);
 		sb.append(", uuid=").append(uuid);

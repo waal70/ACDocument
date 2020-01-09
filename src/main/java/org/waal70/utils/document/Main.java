@@ -8,7 +8,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.waal70.utils.document.gui.ACDocumentController;
 import org.waal70.utils.document.gui.ACDocumentControllerImpl;
-import org.waal70.utils.document.gui.ACDocumentModel;
+import org.waal70.utils.document.gui.SplashScreen;
 
 /**
  * @author awaal
@@ -32,7 +32,13 @@ public class Main {
 		//DirectoryLister.listFiles();
 		
 		//Hand-over to gui:
-		ACDocumentController controller = new ACDocumentControllerImpl(new ACDocumentModel());
+		log.info("Before ControllerImpl");
+		SplashScreen splash = new SplashScreen();
+		splash.setVisible(true);
+		@SuppressWarnings("unused")
+		ACDocumentController controller = new ACDocumentControllerImpl();
+		splash.dispose();
+		log.info("After ControllerImpl");
 		//ACDocumentView.main(args);
 	
 

@@ -1,34 +1,37 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>ACDocument</groupId>
-  <artifactId>ACDocument</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <properties>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>ACDocument</groupId>
+	<artifactId>ACDocument</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-		<dependencies>
+	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
 		</dependency>
 		<dependency>
-    <groupId>org.apache.pdfbox</groupId>
-    <artifactId>pdfbox</artifactId>
-    <version>2.0.18</version>
-</dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.18</version>
+		</dependency>
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>xmpbox</artifactId>
 			<version>2.0.18</version>
 		</dependency>
-		</dependencies>
-		<profiles>
-			<profile>
+	</dependencies>
+	<profiles>
+		<profile>
 			<id>local-run</id>
 			<build>
+				<finalName>${project.artifactId}-${project.version}</finalName>
 				<plugins>
 					<plugin>
 						<groupId>org.codehaus.mojo</groupId>
@@ -43,10 +46,32 @@
 								<configuration>
 									<mainClass>org.waal70.utils.document.Main</mainClass>
 									<arguments>
-										<argument>myArg1</argument>
-										<argument>myArg2</argument>
+
 									</arguments>
 								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>3.1.1</version>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+							<archive>
+								<manifest>
+									<mainClass>org.waal70.utils.document.Main</mainClass>
+								</manifest>
+							</archive>
+						</configuration>
+						<executions>
+							<execution>
+								<id>make-assembly</id> <!-- this is used for inheritance merges -->
+								<phase>package</phase> <!-- bind to the packaging phase -->
+								<goals>
+									<goal>single</goal>
+								</goals>
 							</execution>
 						</executions>
 					</plugin>

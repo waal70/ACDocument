@@ -24,7 +24,7 @@ public class DocumentList extends ConcurrentLinkedQueue<ACDocument> {
 
 	@Override
 	public boolean add(ACDocument e) {
-		// TODO Auto-generated method stub
+		
 		return super.add(e);
 	}
 
@@ -41,28 +41,33 @@ public class DocumentList extends ConcurrentLinkedQueue<ACDocument> {
 	 */
 	private DocumentList() {
 		super();
+		populateList();
 		log.info("DocumentList constructed.");
 	}
 	
-	public DocumentList(List <Path> pathList) {
-		log.info("Received a list of Paths");
+	private void populateList() {
+		
+		//the main directory should be a path
+		log.info("Going to construct a DocumentList...");
+		List<Path> pathList = DirectoryFileLister.listFiles();
+		//pathList now contains a list of filtered pdf files
 		
 		pathList.forEach(path -> {
 			try {
-				log.info("Now working on: " + path);
+				log.info("Now populating Document instance for: " + path);
 				this.add(ACDocumentFactory.getACDocument(path));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Unable to populate queue: " + e.getLocalizedMessage());
 			}
 		});
+		log.info("End of populateList. Number of docs queued: " + this.size());
 		
 	}
 	
 	public ACDocument get() {
-		//This method returns a CanMessage
-		log.debug("ACDocument get requested.");
-
+		//This method returns a Document
+		log.info("ACDocument get requested.");
+		
 		return this.poll();
 		
 	}
