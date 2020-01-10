@@ -7,6 +7,8 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.event.ChangeEvent;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
@@ -79,16 +81,20 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	}
 	private void repopulate() {
 		view.setPDFPreview(currentDocument.getPreview());
-		view.setScanFileName(currentDocument.getTitle());
 		
+		//The read-only properties are:
+		view.setScanFileName(currentDocument.getTitle());
 		view.setScanDated(currentDocument.getCreated());
+		view.setPDFVersion(currentDocument.getPdfVersion());
+		view.setNumPages(String.valueOf(currentDocument.getNumPages()));
+		view.setFileSize(currentDocument.getFileSize());
 		
 		view.setText(currentDocument.getPath());
 		view.getFrame().repaint();
 	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		log.info("Action things were done: " + e.getActionCommand() + e.paramString());
+		log.info("Action things were done: " + e.getSource().toString() + ":" + e.getActionCommand() + e.paramString());
 		if (e.getActionCommand() == "Next")
 		{
 			log.info("requesting new doc off of queue");
@@ -100,7 +106,9 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		}
 		
 	}
-
+	public void dateChanged(ChangeEvent e) {
+		log.info("Datum gewijzigd!");
+	}
 	/**
 	 * @return the currentDocument
 	 */

@@ -31,6 +31,26 @@ public class ACDocument extends GenericDocument {
 	private String recipient;
 	private String senderCompany;
 	
+	private String pdfVersion;
+	private int numPages = 0;
+	private String fileSize;
+	
+	public String getPdfVersion() {
+		return pdfVersion;
+	}
+
+	public void setPdfVersion(String pdfVersion) {
+		this.pdfVersion = pdfVersion;
+	}
+
+	public int getNumPages() {
+		return numPages;
+	}
+
+	public void setNumPages(int numPages) {
+		this.numPages = numPages;
+	}
+
 	// This is GenericDocument.created
 	// private Calendar scanDated; 
 	private Calendar targetDated;
@@ -176,5 +196,13 @@ public class ACDocument extends GenericDocument {
 	 */
 	public void setTargetDated(Calendar targetDated) {
 		this.targetDated = targetDated;
+	}
+	
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
 	}
 }

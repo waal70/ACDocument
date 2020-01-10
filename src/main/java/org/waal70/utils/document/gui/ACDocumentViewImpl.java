@@ -9,6 +9,13 @@ import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerDateModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -22,8 +29,9 @@ import javax.swing.JScrollPane;
  */
 @SuppressWarnings("serial")
 public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView {
-
-    /**
+	
+	private static Logger log = LogManager.getLogger(ACDocumentViewImpl.class);
+	/**
      * Creates new form NewFrame
      */
     public ACDocumentViewImpl(ACDocumentController controller) {
@@ -52,7 +60,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         txtFileSize = new javax.swing.JTextField();
         panelArchive = new javax.swing.JPanel();
         lblTargetDated = new javax.swing.JLabel();
-        txtTargetDated = new javax.swing.JTextField();
+        txtTargetDated = new javax.swing.JSpinner();
+        //txtTargetDated = new javax.swing.JFormattedTextField(df);
         lblSender = new javax.swing.JLabel();
         lblSubject = new javax.swing.JLabel();
         txtSubject = new javax.swing.JTextField();
@@ -70,7 +79,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         panelActions = new javax.swing.JPanel();
         btnNext = new javax.swing.JButton();
         btnPrevious = new javax.swing.JButton();
-        //panelPDF = new javax.swing.JPanel();
+        panelPDF = new JScrollPane();
         lblPDFPreview = new javax.swing.JLabel();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -162,9 +171,32 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
         panelArchive.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Archive properties", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N
 
+ /////BLOCK FOR TARGET DATE
+        
+        SimpleDateFormat datePattern = new SimpleDateFormat("dd-MM-yyyy");
+        JSpinner txtTargetDated = new JSpinner(new SpinnerDateModel());
+        txtTargetDated.setEditor(new JSpinner.DateEditor(txtTargetDated, datePattern.toPattern()));
+        
+        
         lblTargetDated.setText("Dated:");
+       // txtTargetDated.setColumns(20);
+       // try {
+       //    MaskFormatter dateMask = new MaskFormatter("##-##-####");
+       //     dateMask.setPlaceholderCharacter('_');
+       //     dateMask.install(txtTargetDated);
+       // } catch (ParseException ex) {
+       //    log.error("Unable to parse date: " + ex.getLocalizedMessage());
+       // }
 
-        txtTargetDated.setText("jTextField1");
+       
+        txtTargetDated.addChangeListener(new ChangeListener() {
+    		@Override
+			public void stateChanged(ChangeEvent e) {
+				controller.dateChanged(e);
+			}
+        });
+/////BLOCK FOR TARGET DATE       
+        
 
         lblSender.setText("Sender:");
 
@@ -330,6 +362,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         );
 
         pack();
+        log.info("View after pack()");
     }// </editor-fold>                        
 
     /**
@@ -371,7 +404,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     private javax.swing.JTextField txtScanDated;
     private javax.swing.JTextField txtSenderCompany;
     private javax.swing.JTextField txtSubject;
-    private javax.swing.JTextField txtTargetDated;
+    private javax.swing.JSpinner txtTargetDated;
     private javax.swing.JTextField txtTargetFileName;
     private javax.swing.JTextField txtTargetFolder;
     // End of variables declaration
@@ -472,5 +505,23 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	public Frame getFrame() {
 		// TODO Auto-generated method stub
 		return this;
+	}
+
+	@Override
+	public void setPDFVersion(String text) {
+		txtPDFVersion.setText(text);
+		
+	}
+
+	@Override
+	public void setNumPages(String text) {
+		txtNumPages.setText(text);
+		
+	}
+
+	@Override
+	public void setFileSize(String text) {
+		txtFileSize.setText(text);
+		
 	}
 }

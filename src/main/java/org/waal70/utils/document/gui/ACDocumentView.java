@@ -14,10 +14,13 @@ import java.util.Calendar;
 public interface ACDocumentView {
 	
 	public void setPDFPreview(BufferedImage preview);
-	
-	
+		
 	public void setScanFileName(String text);
 	public String getScanFileName();
+	
+	public void setPDFVersion(String text);
+	public void setNumPages(String text);
+	public void setFileSize(String text);
 	
 	public void setTargetFileName(String text);
 	public String getTargetFileName();

@@ -50,12 +50,11 @@ public class ACDocumentFactory {
 		
 		newDoc.setPreview(createPreviewImage(pdoc, true));
 		newDoc.setTitle(path.toFile().getName());
-		
 		newDoc.setCreated(path.toFile().lastModified());
-        //document.close();
 		
-		//in case of version being lower than 2.0, use documentinformation
-		//After that, use metadata
+		newDoc.setPdfVersion(String.valueOf(pdoc.getVersion()));
+		newDoc.setNumPages(pdoc.getNumberOfPages());
+		newDoc.setFileSize(path.toFile().length()/(1024*1024) + "MB");
 
 		log.info("Processing a PDF with " + pdoc.getNumberOfPages() + " pages, according to " + pdoc.getVersion() + " spec");
 		
