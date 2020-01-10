@@ -7,7 +7,8 @@ import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.io.DocumentList;
 
@@ -15,10 +16,10 @@ import org.waal70.utils.document.io.DocumentList;
  * @author awaal
  *
  */
-public class ACDocumentControllerImpl implements ACDocumentController, ButtonObserver, ActionListener {
+public class ACDocumentControllerImpl implements ACDocumentController, ActionListener {
 	
 	
-	private static Logger log = Logger.getLogger(ACDocumentControllerImpl.class);
+	private static Logger log = LogManager.getLogger(ACDocumentControllerImpl.class);
 	
 	private ACDocument model;
 	private ACDocumentViewImpl view;
@@ -64,14 +65,6 @@ public class ACDocumentControllerImpl implements ACDocumentController, ButtonObs
 		//add action listeners here
 	}
 	
-
-	@Override
-	public void buttonWasChanged(ACDocumentView view) {
-		
-		log.info("Button things were done");
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public ACDocumentView getView() {

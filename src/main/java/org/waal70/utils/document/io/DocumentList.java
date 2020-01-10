@@ -8,7 +8,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.ACDocumentFactory;
 
@@ -28,7 +29,7 @@ public class DocumentList extends ConcurrentLinkedQueue<ACDocument> {
 		return super.add(e);
 	}
 
-	private static Logger log = Logger.getLogger(DocumentList.class);
+	private static Logger log = LogManager.getLogger(DocumentList.class);
 	private static class SingletonHelper{
         private static final DocumentList INSTANCE = new DocumentList();
     }

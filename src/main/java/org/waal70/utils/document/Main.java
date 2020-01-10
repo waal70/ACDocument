@@ -5,7 +5,8 @@ package org.waal70.utils.document;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.gui.ACDocumentController;
 import org.waal70.utils.document.gui.ACDocumentControllerImpl;
 import org.waal70.utils.document.gui.SplashScreen;
@@ -15,7 +16,9 @@ import org.waal70.utils.document.gui.SplashScreen;
  *
  */
 public class Main {
-	private static Logger log = Logger.getLogger(Main.class);
+	
+	private static Logger log = LogManager.getLogger(Main.class);
+	//private static Logger log = Logger.getLogger(Main.class);
 
 	/**
 	 * @param args
@@ -23,7 +26,9 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException {
 		
-		log.info("Hello, you started the main class, now doing document window");
+		//System.setProperty("log4j.configurationFile","resources/log4j.properties");
+		//System.out.println("Logfile is: " + System.getProperty("log4j.configurationFile"));
+		log.error("Hello, you started the main class, now doing document window");
 		log.info("Irideos zakelijk has: " + Archive.DocumentType.Iri_zak.getChildren().length);
 		log.info("ROOT has: " + Archive.DocumentType.ROOT.getChildren().length);
 		log.info(Archive.DocumentType.Iri_zak.getPath());

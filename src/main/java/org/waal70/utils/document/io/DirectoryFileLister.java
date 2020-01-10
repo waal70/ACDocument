@@ -13,43 +13,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 /**
  * @author awaal
  *
  */
 public class DirectoryFileLister {
-	private static Logger log = Logger.getLogger(DirectoryFileLister.class);
-	
-	public static List<Path> listFiles()
-	{
-		String dirName = "/Users/awaal/TEMP/PDF/";
+	private static Logger log = LogManager.getLogger(DirectoryFileLister.class);
 
-		/*
-		 * Files.list(new File(dirName).toPath()) 
-		 * 		.limit(10) 
-		 * 		.forEach(path -> {
-		 * 			log.info(path); });
-		 */
+	public static List<Path> listFiles() {
+		String dirname = "/Users/awaal/TEMP/PDF/";
+		if (System.getProperty("os.name").startsWith("Windows"))
+			dirname = "C:\\pdf\\";
+
 		List<Path> result = new ArrayList<Path>();
 		Stream<Path> str;
-	try {
-		str = Files.list(new File(dirName).toPath())
-				   .filter(s -> s.toString().endsWith(".pdf"))
-				   .limit(10);
-        result = str.collect(Collectors.toList());
-        str.close();
-	} catch (IOException e) {
-		log.error("Error building filelist: " + e.getLocalizedMessage());
-		result.add(Paths.get(""));
-		
+		try {
+			str = Files.list(new File(dirname).toPath()).filter(s -> s.toString().endsWith(".pdf")).limit(10);
+			result = str.collect(Collectors.toList());
+			str.close();
+		} catch (IOException e) {
+			log.error("Error building filelist: " + e.getLocalizedMessage());
+			result.add(Paths.get(""));
+
+		}
+
+		return result;
 	}
-    		   
-     
-
-        return result;
-     }
-	}
-
-
+}
