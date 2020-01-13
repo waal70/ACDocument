@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -67,7 +68,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         txtSubject = new javax.swing.JTextField();
         lblRecipient = new javax.swing.JLabel();
         cmbRecipient = new javax.swing.JComboBox<>();
-        txtSenderCompany = new javax.swing.JTextField();
+        cmbSenderCompany = new javax.swing.JComboBox();
         lblMainCategory = new javax.swing.JLabel();
         cmbCategory = new javax.swing.JComboBox<>();
         lblType = new javax.swing.JLabel();
@@ -208,11 +209,12 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
         cmbRecipient.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        txtSenderCompany.setText("jTextField1");
+        //cmbSenderCompany.setText("jTextField1");
 
         lblMainCategory.setText("Category:");
 
         cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbCategory.addActionListener((ActionListener) controller);
 
         lblType.setText("Type:");
 
@@ -251,7 +253,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                             .addComponent(txtTargetDated)
                             .addComponent(txtSubject)
                             .addComponent(cmbRecipient, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(txtSenderCompany)))
+                            .addComponent(cmbSenderCompany,0, 147, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelArchiveLayout.createSequentialGroup()
                         .addComponent(lblTargetFolder)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -267,7 +269,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelArchiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSender)
-                    .addComponent(txtSenderCompany, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbSenderCompany, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelArchiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblSubject)
@@ -402,7 +404,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     private javax.swing.JTextField txtNumPages;
     private javax.swing.JTextField txtPDFVersion;
     private javax.swing.JTextField txtScanDated;
-    private javax.swing.JTextField txtSenderCompany;
+    private javax.swing.JComboBox<String> cmbSenderCompany;
     private javax.swing.JTextField txtSubject;
     private javax.swing.JSpinner txtTargetDated;
     private javax.swing.JTextField txtTargetFileName;
@@ -522,6 +524,36 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	@Override
 	public void setFileSize(String text) {
 		txtFileSize.setText(text);
+		
+	}
+
+	@Override
+	public void setCompanyCombo(String[] text) {
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
+		cmbSenderCompany.setModel(model);
+		//cmbSenderCompany.setS
+		//cmbSenderCompany.setEditable(true);
+	
+	}
+
+	@Override
+	public void setCategoryCombo(String[] text) {
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
+		cmbCategory.setModel(model);
+		
+	}
+
+	@Override
+	public String getCurrentCategory() {
+		return cmbCategory.getSelectedItem().toString();
+	}
+
+	@Override
+	public void setTypeCombo(String[] text) {
+		//This one is depending on the Category combo:
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
+		cmbType.setModel(model);
+		
 		
 	}
 }

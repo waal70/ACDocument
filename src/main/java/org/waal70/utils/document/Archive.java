@@ -39,6 +39,17 @@ public class Archive {
 			return this.fileAs;
 		}
 		
+		public static String[] getEnumForCombo() {
+			
+			Recipient[] recipients = values();
+			String[] cmbRecps = new String[recipients.length];
+			
+			for (int i=0;i<recipients.length;i++)
+				cmbRecps[i]=recipients[i].getFileAs();
+			
+			return cmbRecps;
+		}
+		
 		//Overloaded in case both are the same
 		private Recipient(String displayAs) {
 			this(displayAs, displayAs);
@@ -68,9 +79,9 @@ public class Archive {
          	Kateway(FINANCIEEL,8,"Kateway"),
          	Irideos(FINANCIEEL,9,"Irideos"),
          	
-         BON(ROOT,2,"Bonnen_Facturen_Garanties"),
+         BONNEN(ROOT,2,"Bonnen_Facturen_Garanties"),
      
-         CONTRACT(ROOT,3,"Contracten_Overeenkomsten"),
+         CONTRACTEN(ROOT,3,"Contracten_Overeenkomsten"),
          
          CORRESPONDENTIE(ROOT,4,"Correspondentie"),
          	Inkomend(CORRESPONDENTIE,1,"Inkomend"),
@@ -78,25 +89,25 @@ public class Archive {
          	Iri_cor(CORRESPONDENTIE,3,"Irideos"),
          	Kate_cor(CORRESPONDENTIE,4,"Kateway"),
          	
-         BELASTING(ROOT,5,"Belastingen"),
-         	Belastingdienst(BELASTING,1,"Belastingdient"),
+         BELASTINGEN(ROOT,5,"Belastingen"),
+         	Belastingdienst(BELASTINGEN,1,"Belastingdient"),
          		Iri_bel(Belastingdienst,1,"Irideos"),
          		Kate_bel(Belastingdienst,2,"Kateway"),
-         	Gemeente(BELASTING,2,"Gemeentebelastingen"),
+         	Gemeente(BELASTINGEN,2,"Gemeentebelastingen"),
          	
          MEDISCH(ROOT,6,"Medisch"),
          
-         VERZEKERING(ROOT,7,"Verzekeringen"),
-         	Ziektekosten(VERZEKERING,1,"Ziektekosten"),
-         	Overig(VERZEKERING,2,"Overig"),
+         VERZEKERINGEN(ROOT,7,"Verzekeringen"),
+         	Ziektekosten(VERZEKERINGEN,1,"Ziektekosten"),
+         	Overig(VERZEKERINGEN,2,"Overig"),
          	
-         OFFICIEEL(ROOT,8,"Officiele_documenten"),
-         	Persoonlijk(OFFICIEEL,1,"Persoonlijk"),
-         	Akte(OFFICIEEL,2,"Akten_Uittreksels"),
-         	Zakelijk(OFFICIEEL,3,"Zakelijk"),
+         OFFICIELE(ROOT,8,"Officiele_documenten"),
+         	Persoonlijk(OFFICIELE,1,"Persoonlijk"),
+         	Akte(OFFICIELE,2,"Akten_Uittreksels"),
+         	Zakelijk(OFFICIELE,3,"Zakelijk"),
          		Iri_zak(Zakelijk,1,"Irideos"),
          		Kate_zak(Zakelijk,2,"Kateway"),
-         DIPLOMA(ROOT,1,"Diploma's_Certificaten")
+         DIPLOMA(ROOT,9,"Diploma_Certificaten")
 
     ;
 
@@ -122,6 +133,36 @@ public class Archive {
 			if (this.parent != null)
 				this.parent.addChild(this);
 
+		}
+		public static String[] getCategoryForCombo() {
+			
+			DocumentType[] doctypes = values();
+			
+			//slightly different approach because I only want the
+			//main categories
+			List<String> categories = new ArrayList<String>();
+						
+			for (int i=0;i<doctypes.length;i++)
+			{
+				//only add if parent is root!
+				if (doctypes[i].getParent() == ROOT)
+					categories.add(doctypes[i].getOnlyPath().replaceAll("_", ", "));
+			}
+			
+			return categories.toArray(new String[categories.size()]);
+		}
+		
+		public static String[] getTypeForCombo(DocumentType parentCategory) {
+			
+			DocumentType[] children = parentCategory.getChildren();
+			String[] result = new String[children.length];
+			
+			for (int i=0;i<children.length;i++)
+			{
+				result[i] = children[i].getOnlyPath();
+			}
+			
+			return result;
 		}
 
 		/**
@@ -160,6 +201,10 @@ public class Archive {
 			else
 				return parent.getArchivecode() + Integer.toString(archivecode) + SEPARATOR;
 
+		}
+		
+		public String getOnlyPath() {
+			return path;
 		}
 
 		/**

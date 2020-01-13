@@ -12,7 +12,9 @@ import javax.swing.event.ChangeEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
+import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.io.DocumentList;
+import org.waal70.utils.document.io.ReadCSV;
 
 /**
  * @author awaal
@@ -91,7 +93,40 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 		view.setText(currentDocument.getPath());
 		view.getFrame().repaint();
+		
+		populateCombo();
 	}
+	
+	private void populateCombo() {
+		
+		//CompanyList:
+		ReadCSV csv = new ReadCSV();
+		view.setCompanyCombo(csv.populateCompanyList().getListforCombo());
+		
+		//Category:
+		view.setCategoryCombo(DocumentType.getCategoryForCombo());
+		log.info("Category is: " + view.getCurrentCategory());
+		
+		//Type:
+		populateDependent();
+
+		
+	}
+	
+	private void populateDependent() {
+		//TODO: this is hacky to ensure there is always an underscore in the category name
+		String currentCategory = view.getCurrentCategory().replaceAll(", ", "_") + "_";
+		//END 
+		currentCategory = currentCategory.substring(0,currentCategory.indexOf('_'));
+		log.info("Category: " + currentCategory.toUpperCase());
+		DocumentType parent = DocumentType.valueOf(currentCategory.toUpperCase());
+		String[] cmbFill = DocumentType.getTypeForCombo(parent);
+		if (cmbFill.length == 0)
+			view.setTypeCombo(new String[]{""});
+		else
+			view.setTypeCombo(DocumentType.getTypeForCombo(parent));
+	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		log.info("Action things were done: " + e.getSource().toString() + ":" + e.getActionCommand() + e.paramString());
@@ -104,6 +139,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			else
 				repopulate();
 		}
+		populateDependent();
 		
 	}
 	public void dateChanged(ChangeEvent e) {

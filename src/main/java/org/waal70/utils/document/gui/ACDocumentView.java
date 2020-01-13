@@ -40,6 +40,12 @@ public interface ACDocumentView {
     public void setText(String text);
     public String getText();
     
+    public void setCompanyCombo(String[] text);
+    public void setCategoryCombo(String[] text);
+    public void setTypeCombo(String[] text);
+    
+    public String getCurrentCategory();
+    
     public Frame getFrame();
   
 
