@@ -4,8 +4,11 @@
 package org.waal70.utils.document.gui;
 
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.Calendar;
+
+import org.waal70.utils.document.Archive.DocumentType;
 
 /**
  * @author awaal
@@ -42,8 +45,12 @@ public interface ACDocumentView {
     
     public void setCompanyCombo(String[] text);
     public void setCategoryCombo(String[] text);
+    public void setCategoryCombo2(DocumentType[] text);
     public void setTypeCombo(String[] text);
     
+    public String getTypeCombo();
+    public DocumentType getCategoryCombo();
+   
     public String getCurrentCategory();
     
     public Frame getFrame();

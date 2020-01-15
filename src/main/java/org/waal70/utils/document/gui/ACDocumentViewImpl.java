@@ -1,6 +1,7 @@
 package org.waal70.utils.document.gui;
 
 import java.awt.Frame;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
@@ -17,6 +19,7 @@ import javax.swing.event.ChangeListener;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.waal70.utils.document.Archive.DocumentType;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -70,7 +73,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         cmbRecipient = new javax.swing.JComboBox<>();
         cmbSenderCompany = new javax.swing.JComboBox();
         lblMainCategory = new javax.swing.JLabel();
-        cmbCategory = new javax.swing.JComboBox<>();
+        cmbCategory = new javax.swing.JComboBox<DocumentType>();
         lblType = new javax.swing.JLabel();
         cmbType = new javax.swing.JComboBox<>();
         lblTargetFileName = new javax.swing.JLabel();
@@ -213,12 +216,19 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
         lblMainCategory.setText("Category:");
 
-        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        //cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cmbCategory.addActionListener((ActionListener) controller);
 
         lblType.setText("Type:");
 
         cmbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbType.addActionListener(new ActionListener () {
+        	@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.docTypeChanged(e);
+				
+			}
+        });
 
         lblTargetFileName.setText("Target name:");
 
@@ -378,7 +388,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     // Variables declaration - do not modify                     
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
-    private javax.swing.JComboBox<String> cmbCategory;
+    private JComboBox<DocumentType> cmbCategory;
     private javax.swing.JComboBox<String> cmbRecipient;
     private javax.swing.JComboBox<String> cmbType;
     private javax.swing.JLabel lblFileSize;
@@ -538,8 +548,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public void setCategoryCombo(String[] text) {
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
-		cmbCategory.setModel(model);
+		//DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
+		//cmbCategory.setModel(model);
 		
 	}
 
@@ -554,6 +564,23 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
 		cmbType.setModel(model);
 		
+		
+	}
+
+	@Override
+	public String getTypeCombo() {
+		return cmbType.getModel().getSelectedItem().toString();
+	}
+
+	@Override
+	public DocumentType getCategoryCombo() {
+		return (DocumentType) cmbCategory.getModel().getSelectedItem();
+	}
+
+	@Override
+	public void setCategoryCombo2(DocumentType[] text) {
+		DefaultComboBoxModel<DocumentType> model = new DefaultComboBoxModel<DocumentType>(text);
+		cmbCategory.setModel(model);
 		
 	}
 }

@@ -7,7 +7,17 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * @author awaal
+ *	The main purpose of this class is to hold the different enums for the application
+ *	An enum should ALWAYS follow the following design (in order to properly work with
+ *	ComboBoxes:
+ *	toString() (instance level) should be overridden with the text to display in the combobox
+ *	Therefore, any enum should at least have a "Set" for display purposes.
+ */
 public class Archive {
+	
+	
 	private static Logger log = LogManager.getLogger(Archive.class);
 
 	public interface DocumentTypeInterface {
@@ -30,6 +40,11 @@ public class Archive {
 		
 		private String fileAs;
 		private String displayAs;
+		
+		@Override
+		public String toString() {
+			return getDisplayAs();
+		}
 		
 		public String getDisplayAs() {
 			return this.displayAs;
@@ -62,6 +77,13 @@ public class Archive {
 		}
 	}
 
+	/**
+	 * @author awaal
+	 * Should be as follows:
+	 * ENUM_NAME(ENUM_PARENT, ARCHIVECODE, DISPLAYNAME, PATH_SUFFIX);
+	 * 
+	 * If path_suffix is null that means it is equal to displayname
+	 */
 	public enum DocumentType {
         ROOT(null,"Digitaal_Archief"),
         
@@ -71,29 +93,29 @@ public class Archive {
             Geenidee(ALGEMEEN,99,"Geenidee"),
             
          FINANCIEEL(ROOT,1,"Financieel"),
-         	Rekening(FINANCIEEL,1,"Rekeningen"),
-         	Afschrift(FINANCIEEL,2,"Rekeningafschriften"),
-         	Salaris(FINANCIEEL,3,"Salarisspecificaties"),
-         	Declaratie(FINANCIEEL,4,"Declaraties"),
-         	Jaaropgaaf(FINANCIEEL,5,"Jaaropgaven"),
+         	Rekeningen(FINANCIEEL,1,"Rekeningen"),
+         	Rekeningafschriften(FINANCIEEL,2,"Rekeningafschriften"),
+         	Salarisspecificaties(FINANCIEEL,3,"Salarisspecificaties"),
+         	Declaraties(FINANCIEEL,4,"Declaraties"),
+         	Jaaropgaven(FINANCIEEL,5,"Jaaropgaven"),
          	Kateway(FINANCIEEL,8,"Kateway"),
          	Irideos(FINANCIEEL,9,"Irideos"),
          	
          BONNEN(ROOT,2,"Bonnen_Facturen_Garanties"),
      
-         CONTRACTEN(ROOT,3,"Contracten_Overeenkomsten"),
+         CONTRACTEN(ROOT,3,"Contracten, Overeenkomsten"),
          
          CORRESPONDENTIE(ROOT,4,"Correspondentie"),
          	Inkomend(CORRESPONDENTIE,1,"Inkomend"),
          	Uitgaand(CORRESPONDENTIE,2,"Uitgaand"),
-         	Iri_cor(CORRESPONDENTIE,3,"Irideos"),
-         	Kate_cor(CORRESPONDENTIE,4,"Kateway"),
+         	Irideos_cor(CORRESPONDENTIE,3,"Irideos"),
+         	Kateway_cor(CORRESPONDENTIE,4,"Kateway"),
          	
          BELASTINGEN(ROOT,5,"Belastingen"),
-         	Belastingdienst(BELASTINGEN,1,"Belastingdient"),
-         		Iri_bel(Belastingdienst,1,"Irideos"),
-         		Kate_bel(Belastingdienst,2,"Kateway"),
-         	Gemeente(BELASTINGEN,2,"Gemeentebelastingen"),
+         	Belastingdienst(BELASTINGEN,1,"Belastingdienst"),
+         		Irideos_bel(Belastingdienst,1,"Irideos"),
+         		Kateway_bel(Belastingdienst,2,"Kateway"),
+         	Gemeentebelastingen(BELASTINGEN,2,"Gemeentebelastingen"),
          	
          MEDISCH(ROOT,6,"Medisch"),
          
@@ -101,24 +123,25 @@ public class Archive {
          	Ziektekosten(VERZEKERINGEN,1,"Ziektekosten"),
          	Overig(VERZEKERINGEN,2,"Overig"),
          	
-         OFFICIELE(ROOT,8,"Officiele_documenten"),
+         OFFICIELE(ROOT,8,"Officiële documenten"),
          	Persoonlijk(OFFICIELE,1,"Persoonlijk"),
-         	Akte(OFFICIELE,2,"Akten_Uittreksels"),
+         	Akte(OFFICIELE,2,"Akten, Uittreksels"),
          	Zakelijk(OFFICIELE,3,"Zakelijk"),
          		Iri_zak(Zakelijk,1,"Irideos"),
          		Kate_zak(Zakelijk,2,"Kateway"),
-         DIPLOMA(ROOT,9,"Diploma_Certificaten")
+         DIPLOMA(ROOT,9,"Diploma's, Certificaten")
 
     ;
 
 		private DocumentType parent = null;
 		private String path = "";
+		private String displayAs = "";
 		private int archivecode = 0;
 		
 		private List<DocumentType> children = new ArrayList<DocumentType>();
 
 		private DocumentType(DocumentType parent, String path) {
-			// no archivecode given, so assume zeroß
+			// no archivecode given, so assume zero
 			this(parent, 0, path);
 
 		}
@@ -133,6 +156,31 @@ public class Archive {
 			if (this.parent != null)
 				this.parent.addChild(this);
 
+		}
+		private DocumentType(DocumentType parent, int archivecode, String displayAs, String path) {
+			this.parent = parent;
+			this.archivecode = archivecode;
+			this.displayAs = displayAs;
+			this.path=path;
+		}
+		@Override
+		public String toString() {
+			return this.getOnlyPath();
+		}
+		
+		//Try out giving enum type
+		public static DocumentType[] getCategoryCombo() {
+			DocumentType[] doctypes = values();
+			List<DocumentType> categories = new ArrayList<DocumentType>();
+			for (int i=0;i<doctypes.length;i++)
+			{
+				//only add if parent is root!
+				if (doctypes[i].getParent() == ROOT)
+					categories.add(doctypes[i]);
+			}
+			return categories.toArray(new DocumentType[categories.size()]);
+			
+			
 		}
 		public static String[] getCategoryForCombo() {
 			

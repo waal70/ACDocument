@@ -30,6 +30,8 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	
 	private ACDocument currentDocument; 
 	
+	private DocumentType currentType;
+	
 	private DocumentList docQueue = DocumentList.getInstance(); 
 	
 
@@ -104,7 +106,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		view.setCompanyCombo(csv.populateCompanyList().getListforCombo());
 		
 		//Category:
-		view.setCategoryCombo(DocumentType.getCategoryForCombo());
+		view.setCategoryCombo2(DocumentType.getCategoryCombo());
 		log.info("Category is: " + view.getCurrentCategory());
 		
 		//Type:
@@ -117,15 +119,29 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		//TODO: this is hacky to ensure there is always an underscore in the category name
 		String currentCategory = view.getCurrentCategory().replaceAll(", ", "_") + "_";
 		//END 
+		log.info("CategoryCombo: " + view.getCategoryCombo().getPath());
 		currentCategory = currentCategory.substring(0,currentCategory.indexOf('_'));
 		log.info("Category: " + currentCategory.toUpperCase());
 		DocumentType parent = DocumentType.valueOf(currentCategory.toUpperCase());
 		String[] cmbFill = DocumentType.getTypeForCombo(parent);
 		if (cmbFill.length == 0)
+		{
+			//Apparently, the document type is only a parent category
+			this.currentType = parent;
 			view.setTypeCombo(new String[]{""});
+		}
 		else
+		{
+			//The document type is a subtype
+			log.info("Setting new doctype: ");
 			view.setTypeCombo(DocumentType.getTypeForCombo(parent));
+			this.docTypeChanged();
+		}
+		
+		
+				
 	}
+	
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -150,6 +166,20 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	 */
 	public ACDocument getCurrentDocument() {
 		return currentDocument;
+	}
+
+	private void docTypeChanged() {
+		//Courtesy method to call whenever the category changes
+		this.docTypeChanged(new ActionEvent(this, 0,null));
+	}
+	@Override
+	public void docTypeChanged(ActionEvent e) {
+		// This means the subtype has changed, set the document type accordingly
+		log.info("New type: " + view.getTypeCombo());
+		DocumentType temp = DocumentType.valueOf(view.getTypeCombo());
+		log.info("Documenttype is: " + temp.getPath());
+		
+		
 	}
 
 }
