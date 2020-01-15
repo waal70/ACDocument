@@ -106,8 +106,8 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		view.setCompanyCombo(csv.populateCompanyList().getListforCombo());
 		
 		//Category:
-		view.setCategoryCombo2(DocumentType.getCategoryCombo());
-		log.info("Category is: " + view.getCurrentCategory());
+		view.setCategoryCombo(DocumentType.getCategoryCombo());
+		log.info("Category is: " + view.getCategoryCombo().getDisplayAs());
 		
 		//Type:
 		populateDependent();
@@ -117,29 +117,28 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	
 	private void populateDependent() {
 		//TODO: this is hacky to ensure there is always an underscore in the category name
-		String currentCategory = view.getCurrentCategory().replaceAll(", ", "_") + "_";
+		//String currentCategory = view.getCurrentCategory().replaceAll(", ", "_") + "_";
 		//END 
-		log.info("CategoryCombo: " + view.getCategoryCombo().getPath());
-		currentCategory = currentCategory.substring(0,currentCategory.indexOf('_'));
-		log.info("Category: " + currentCategory.toUpperCase());
-		DocumentType parent = DocumentType.valueOf(currentCategory.toUpperCase());
-		String[] cmbFill = DocumentType.getTypeForCombo(parent);
+		DocumentType currentCategory = view.getCategoryCombo();
+		DocumentType[] cmbFill = DocumentType.getTypeForCombo(currentCategory);
 		if (cmbFill.length == 0)
 		{
 			//Apparently, the document type is only a parent category
-			this.currentType = parent;
-			view.setTypeCombo(new String[]{""});
+			log.info("Setting new doctype (category: ");
+			this.currentType = currentCategory;
+			view.setTypeCombo(new DocumentType[] {DocumentType.EMPTY});
+			view.disableTypeCombo();
+			categoryChanged();
 		}
 		else
 		{
 			//The document type is a subtype
 			log.info("Setting new doctype: ");
-			view.setTypeCombo(DocumentType.getTypeForCombo(parent));
+			view.setTypeCombo(DocumentType.getTypeForCombo(currentCategory));
+			view.enableTypeCombo();
 			this.docTypeChanged();
 		}
-		
-		
-				
+			
 	}
 	
 	
@@ -175,11 +174,15 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	@Override
 	public void docTypeChanged(ActionEvent e) {
 		// This means the subtype has changed, set the document type accordingly
-		log.info("New type: " + view.getTypeCombo());
-		DocumentType temp = DocumentType.valueOf(view.getTypeCombo());
+		log.info("New type: " + view.getTypeCombo().getDisplayAs());
+		DocumentType temp = view.getTypeCombo();
 		log.info("Documenttype is: " + temp.getPath());
-		
-		
+	}
+	
+	private void categoryChanged() {
+		log.info("New type: " + view.getCategoryCombo().getDisplayAs());
+		DocumentType temp = view.getCategoryCombo();
+		log.info("Documenttype is: " + temp.getPath());
 	}
 
 }

@@ -75,7 +75,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         lblMainCategory = new javax.swing.JLabel();
         cmbCategory = new javax.swing.JComboBox<DocumentType>();
         lblType = new javax.swing.JLabel();
-        cmbType = new javax.swing.JComboBox<>();
+        cmbType = new javax.swing.JComboBox<DocumentType>();
         lblTargetFileName = new javax.swing.JLabel();
         txtTargetFileName = new javax.swing.JTextField();
         lblTargetFolder = new javax.swing.JLabel();
@@ -221,7 +221,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
         lblType.setText("Type:");
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        //cmbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cmbType.addActionListener(new ActionListener () {
         	@Override
 			public void actionPerformed(ActionEvent e) {
@@ -390,7 +390,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     private javax.swing.JButton btnPrevious;
     private JComboBox<DocumentType> cmbCategory;
     private javax.swing.JComboBox<String> cmbRecipient;
-    private javax.swing.JComboBox<String> cmbType;
+    private JComboBox<DocumentType> cmbType;
     private javax.swing.JLabel lblFileSize;
     private javax.swing.JLabel lblMainCategory;
     private javax.swing.JLabel lblNumPages;
@@ -547,29 +547,32 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	}
 
 	@Override
-	public void setCategoryCombo(String[] text) {
-		//DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
-		//cmbCategory.setModel(model);
-		
+	public void setCategoryCombo(DocumentType[] text) {
+		DefaultComboBoxModel<DocumentType> model = new DefaultComboBoxModel<DocumentType>(text);
+		cmbCategory.setModel(model);
+
 	}
 
 	@Override
-	public String getCurrentCategory() {
-		return cmbCategory.getSelectedItem().toString();
-	}
-
-	@Override
-	public void setTypeCombo(String[] text) {
+	public void setTypeCombo(DocumentType[] text) {
 		//This one is depending on the Category combo:
-		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
+		DefaultComboBoxModel<DocumentType> model = new DefaultComboBoxModel<DocumentType>(text);
 		cmbType.setModel(model);
-		
-		
+	}
+	
+	@Override
+	public void disableTypeCombo() {
+		cmbType.setEnabled(false);
+	}
+	
+	@Override
+	public void enableTypeCombo() {
+		cmbType.setEnabled(true);
 	}
 
 	@Override
-	public String getTypeCombo() {
-		return cmbType.getModel().getSelectedItem().toString();
+	public DocumentType getTypeCombo() {
+		return (DocumentType) cmbType.getModel().getSelectedItem();
 	}
 
 	@Override
@@ -577,10 +580,4 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 		return (DocumentType) cmbCategory.getModel().getSelectedItem();
 	}
 
-	@Override
-	public void setCategoryCombo2(DocumentType[] text) {
-		DefaultComboBoxModel<DocumentType> model = new DefaultComboBoxModel<DocumentType>(text);
-		cmbCategory.setModel(model);
-		
-	}
 }

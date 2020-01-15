@@ -80,11 +80,13 @@ public class Archive {
 	/**
 	 * @author awaal
 	 * Should be as follows:
-	 * ENUM_NAME(ENUM_PARENT, ARCHIVECODE, DISPLAYNAME, PATH_SUFFIX);
+	 * DocumentType(PARENT, ARCHIVECODE, DISPLAYNAME, PATH_SUFFIX);
 	 * 
 	 * If path_suffix is null that means it is equal to displayname
+	 * If no archivecode is supplied, we will assume zero (0)
 	 */
 	public enum DocumentType {
+		EMPTY(null, ""),
         ROOT(null,"Digitaal_Archief"),
         
         ALGEMEEN(ROOT, 0, "Algemeen"),
@@ -93,17 +95,17 @@ public class Archive {
             Geenidee(ALGEMEEN,99,"Geenidee"),
             
          FINANCIEEL(ROOT,1,"Financieel"),
-         	Rekeningen(FINANCIEEL,1,"Rekeningen"),
-         	Rekeningafschriften(FINANCIEEL,2,"Rekeningafschriften"),
-         	Salarisspecificaties(FINANCIEEL,3,"Salarisspecificaties"),
-         	Declaraties(FINANCIEEL,4,"Declaraties"),
-         	Jaaropgaven(FINANCIEEL,5,"Jaaropgaven"),
+         	Rekening(FINANCIEEL,1,"Rekeningen"),
+         	Afschrift(FINANCIEEL,2,"Rekeningafschriften"),
+         	Salaris(FINANCIEEL,3,"Salarisspecificaties"),
+         	Declaratie(FINANCIEEL,4,"Declaraties"),
+         	Jaaropgave(FINANCIEEL,5,"Jaaropgaven"),
          	Kateway(FINANCIEEL,8,"Kateway"),
          	Irideos(FINANCIEEL,9,"Irideos"),
          	
-         BONNEN(ROOT,2,"Bonnen_Facturen_Garanties"),
+         BONNEN(ROOT,2,"Bonnen, facturen, garanties", "Bonnen_Facturen_Garanties"),
      
-         CONTRACTEN(ROOT,3,"Contracten, Overeenkomsten"),
+         CONTRACTEN(ROOT,3,"Contracten, Overeenkomsten", "Contracten_Overeenkomsten"),
          
          CORRESPONDENTIE(ROOT,4,"Correspondentie"),
          	Inkomend(CORRESPONDENTIE,1,"Inkomend"),
@@ -125,11 +127,11 @@ public class Archive {
          	
          OFFICIELE(ROOT,8,"Officiële documenten"),
          	Persoonlijk(OFFICIELE,1,"Persoonlijk"),
-         	Akte(OFFICIELE,2,"Akten, Uittreksels"),
+         	Akte(OFFICIELE,2,"Akten, Uittreksels", "Akten_Uittreksels"),
          	Zakelijk(OFFICIELE,3,"Zakelijk"),
          		Iri_zak(Zakelijk,1,"Irideos"),
          		Kate_zak(Zakelijk,2,"Kateway"),
-         DIPLOMA(ROOT,9,"Diploma's, Certificaten")
+         DIPLOMA(ROOT,9,"Diploma's, Certificaten", "Diploma's_Certificaten")
 
     ;
 
@@ -142,22 +144,28 @@ public class Archive {
 
 		private DocumentType(DocumentType parent, String path) {
 			// no archivecode given, so assume zero
-			this(parent, 0, path);
+			// also, no displayAs given, so assume same as path
+			this(parent, 0, path, path);
 
 		}
 		private DocumentType(DocumentType parent, int archivecode) {
-			this(parent, archivecode, null);
+			//No path given, no displayAs given, so assume these are null
+			this(parent, archivecode, null, null);
 		}
 
-		private DocumentType(DocumentType parent, int archivecode, String path) {
+		private DocumentType(DocumentType parent, int archivecode, String displayAs) {
+			//No path given, so assume path is the same as displayAs, albeit with
+			// the escaping of comma's to underscores.
 			this.parent = parent;
-			this.path = path;
+			this.displayAs = displayAs;
+			this.path = displayAs != null? displayAs.replaceAll(", ", "_") : displayAs;
 			this.archivecode = archivecode;
 			if (this.parent != null)
 				this.parent.addChild(this);
-
 		}
+
 		private DocumentType(DocumentType parent, int archivecode, String displayAs, String path) {
+			//Everything is supplied:
 			this.parent = parent;
 			this.archivecode = archivecode;
 			this.displayAs = displayAs;
@@ -165,7 +173,9 @@ public class Archive {
 		}
 		@Override
 		public String toString() {
-			return this.getOnlyPath();
+			//This method will be called by the ComboBox, so ensure
+			// this returns the displayAs value.
+			return this.getDisplayAs();
 		}
 		
 		//Try out giving enum type
@@ -200,17 +210,9 @@ public class Archive {
 			return categories.toArray(new String[categories.size()]);
 		}
 		
-		public static String[] getTypeForCombo(DocumentType parentCategory) {
+		public static DocumentType[] getTypeForCombo(DocumentType parentCategory) {
 			
-			DocumentType[] children = parentCategory.getChildren();
-			String[] result = new String[children.length];
-			
-			for (int i=0;i<children.length;i++)
-			{
-				result[i] = children[i].getOnlyPath();
-			}
-			
-			return result;
+			return parentCategory.getChildren();
 		}
 
 		/**
@@ -253,6 +255,10 @@ public class Archive {
 		
 		public String getOnlyPath() {
 			return path;
+		}
+		
+		public String getDisplayAs() {
+			return displayAs;
 		}
 
 		/**

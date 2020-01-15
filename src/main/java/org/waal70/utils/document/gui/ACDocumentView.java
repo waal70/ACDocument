@@ -44,17 +44,20 @@ public interface ACDocumentView {
     public String getText();
     
     public void setCompanyCombo(String[] text);
-    public void setCategoryCombo(String[] text);
-    public void setCategoryCombo2(DocumentType[] text);
-    public void setTypeCombo(String[] text);
     
-    public String getTypeCombo();
+    public void setCategoryCombo(DocumentType[] text);
+    public void setTypeCombo(DocumentType[] text);
+    
+    public void disableTypeCombo();
+	public void enableTypeCombo();
+    
+    public DocumentType getTypeCombo();
     public DocumentType getCategoryCombo();
-   
-    public String getCurrentCategory();
-    
+
     public Frame getFrame();
-  
+
+
+
 
 }
 
