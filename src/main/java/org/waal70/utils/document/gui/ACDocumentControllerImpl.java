@@ -6,6 +6,7 @@ package org.waal70.utils.document.gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 
 import javax.swing.event.ChangeEvent;
 
@@ -48,6 +49,8 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 		//First, get the first document from the queue:
 		log.info("Initview about to munch on a list containing this amount of elements: " + docQueue.size());
+		
+		//retrieve the last item off the queue:
 		currentDocument = docQueue.get();
 		
 		EventQueue.invokeLater(new Runnable() {
@@ -60,18 +63,12 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			}
 		});
 		repopulate();
-		//view.getFrame().setTitle("Changed from Controller!");
+		view.getFrame().setTitle("The AC Archive Document Processor Thingy!");
 		//view.setPDFPreview(currentDocument.getPreview());
 		//view.setText(currentDocument.getPath());
 		//view.getFrame().repaint();
 	}
 	
-	public void initController() {
-		
-		//add action listeners here
-	}
-	
-
 	@Override
 	public ACDocumentView getView() {
 		// TODO Auto-generated method stub
@@ -115,17 +112,16 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 	}
 	
+	/**
+	 * is called every time a change occurs on screen.
+	 */
 	private void populateDependent() {
-		//TODO: this is hacky to ensure there is always an underscore in the category name
-		//String currentCategory = view.getCurrentCategory().replaceAll(", ", "_") + "_";
-		//END 
+		
 		DocumentType currentCategory = view.getCategoryCombo();
 		DocumentType[] cmbFill = DocumentType.getTypeForCombo(currentCategory);
 		if (cmbFill.length == 0)
 		{
 			//Apparently, the document type is only a parent category
-			log.info("Setting new doctype (category: ");
-			this.currentType = currentCategory;
 			view.setTypeCombo(new DocumentType[] {DocumentType.EMPTY});
 			view.disableTypeCombo();
 			categoryChanged();
@@ -157,8 +153,11 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		populateDependent();
 		
 	}
-	public void dateChanged(ChangeEvent e) {
-		log.info("Datum gewijzigd!");
+	public void dateChanged(Date d) {
+		log.info("Datum gewijzigd!" + d.toString());
+		currentDocument.setTargetDated(d);
+		log.info("Date according to GUI: " + view.getTargetDated().toString());
+		log.info("Date according to document: " + currentDocument.getTargetDated().toString());
 	}
 	/**
 	 * @return the currentDocument
@@ -174,15 +173,30 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	@Override
 	public void docTypeChanged(ActionEvent e) {
 		// This means the subtype has changed, set the document type accordingly
-		log.info("New type: " + view.getTypeCombo().getDisplayAs());
-		DocumentType temp = view.getTypeCombo();
-		log.info("Documenttype is: " + temp.getPath());
+		log.info("Type changed: " + view.getTypeCombo().getOnlyPath());
+		setCurrentType(view.getTypeCombo());
 	}
 	
 	private void categoryChanged() {
-		log.info("New type: " + view.getCategoryCombo().getDisplayAs());
-		DocumentType temp = view.getCategoryCombo();
-		log.info("Documenttype is: " + temp.getPath());
+		log.info("Category changed: " + view.getCategoryCombo().getOnlyPath());
+		setCurrentType(view.getCategoryCombo());
+	}
+
+	/**
+	 * @return the currentType
+	 */
+	public DocumentType getCurrentType() {
+		return currentType;
+	}
+
+	/**
+	 * @param currentType the currentType to set
+	 */
+	public void setCurrentType(DocumentType currentType) {
+		//The currentType has been set, this means I also
+		// have to reflect this change in the current document:
+		this.currentType = currentType;
+		this.currentDocument.setDoctype(currentType);
 	}
 
 }

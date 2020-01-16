@@ -4,6 +4,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -13,9 +14,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DateEditor;
 import javax.swing.SpinnerDateModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.DateFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -64,7 +67,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         txtFileSize = new javax.swing.JTextField();
         panelArchive = new javax.swing.JPanel();
         lblTargetDated = new javax.swing.JLabel();
-        txtTargetDated = new javax.swing.JSpinner();
+        txtTargetDated = new javax.swing.JSpinner(new SpinnerDateModel());
         //txtTargetDated = new javax.swing.JFormattedTextField(df);
         lblSender = new javax.swing.JLabel();
         lblSubject = new javax.swing.JLabel();
@@ -181,6 +184,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         JSpinner txtTargetDated = new JSpinner(new SpinnerDateModel());
         txtTargetDated.setEditor(new JSpinner.DateEditor(txtTargetDated, datePattern.toPattern()));
         
+        //(DateFormatter)txtTargetDated.getEditor().getTextField().getFormatter();
+        
         
         lblTargetDated.setText("Dated:");
        // txtTargetDated.setColumns(20);
@@ -196,7 +201,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         txtTargetDated.addChangeListener(new ChangeListener() {
     		@Override
 			public void stateChanged(ChangeEvent e) {
-				controller.dateChanged(e);
+    			//I am going to pass it the new date
+    	        controller.dateChanged((Date)txtTargetDated.getValue());
 			}
         });
 /////BLOCK FOR TARGET DATE       
@@ -490,15 +496,16 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	}
 
 	@Override
-	public void setTargetDated(Calendar date) {
+	public void setTargetDated(Date date) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Calendar getTargetDated() {
-		// TODO Auto-generated method stub
-		return null;
+	public Date getTargetDated() {
+		log.info("In view: " + txtTargetDated.getValue().toString());
+		return (Date) txtTargetDated.getValue();
+		//return now();
 	}
 
 	@Override

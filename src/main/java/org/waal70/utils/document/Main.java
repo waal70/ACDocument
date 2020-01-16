@@ -4,14 +4,12 @@
 package org.waal70.utils.document;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.gui.ACDocumentController;
 import org.waal70.utils.document.gui.ACDocumentControllerImpl;
 import org.waal70.utils.document.gui.SplashScreen;
-import org.waal70.utils.document.io.ReadCSV;
 
 /**
  * @author awaal
@@ -28,35 +26,24 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		log.error("Hello, you started the main class, now doing document window");
-		log.info("Irideos zakelijk has: " + Archive.DocumentType.Iri_zak.getChildren().length);
-		log.info("ROOT has: " + Archive.DocumentType.ROOT.getChildren().length);
-		log.info(Archive.DocumentType.Iri_zak.getPath());
-		
-		log.info("Combo list is: " + Arrays.toString(Archive.DocumentType.getCategoryForCombo()));
-		
-		log.info(Archive.DocumentType.valueOf("ALGEMEEN").getOnlyPath());
-		
-		//ReadCSV myCSV = new ReadCSV();
-		//myCSV.populateCompanyList();
-		
+		// TODO: Externalize settings or make it programmable
+		// TODO: Third level on certain document types (pop-up?)
+		// TODO: -> Algorithm to determine file name
+		// TODO: Create batch file to move files or let the app do it
+		// TODO: Run findbugs/spotbugs
+		// TODO: Restructure packages/classes
+		// TODO: ...
+		log.info("Started the program. Handing over to GUI:");
 		doGUI();
-		
-
-		
-
 	}
-	
+
 	private static void doGUI() {
 		// Hand-over to gui:
-				log.info("Before ControllerImpl");
-				SplashScreen splash = new SplashScreen();
-				splash.setVisible(true);
-				@SuppressWarnings("unused")
-				ACDocumentController controller = new ACDocumentControllerImpl();
-				splash.dispose();
-				log.info("After ControllerImpl");
-		
+		SplashScreen splash = new SplashScreen();
+		splash.setVisible(true);
+		@SuppressWarnings("unused")
+		ACDocumentController controller = new ACDocumentControllerImpl();
+		splash.dispose();
 	}
 
 }

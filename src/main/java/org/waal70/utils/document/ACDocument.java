@@ -5,6 +5,7 @@ package org.waal70.utils.document;
 
 import java.awt.image.BufferedImage;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.waal70.utils.document.Archive.DocumentType;
 
@@ -15,7 +16,6 @@ import org.waal70.utils.document.Archive.DocumentType;
  *
  */
 public class ACDocument extends GenericDocument {
-
 
 	/**
 	 * 
@@ -53,7 +53,7 @@ public class ACDocument extends GenericDocument {
 
 	// This is GenericDocument.created
 	// private Calendar scanDated; 
-	private Calendar targetDated;
+	private Date targetDated;
 
 	
 	private String title = "";
@@ -187,14 +187,14 @@ public class ACDocument extends GenericDocument {
 	/**
 	 * @return the targetDated
 	 */
-	public Calendar getTargetDated() {
+	public Date getTargetDated() {
 		return targetDated;
 	}
 
 	/**
 	 * @param targetDated the targetDated to set
 	 */
-	public void setTargetDated(Calendar targetDated) {
+	public void setTargetDated(Date targetDated) {
 		this.targetDated = targetDated;
 	}
 	

@@ -7,6 +7,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.waal70.utils.document.Archive.DocumentType;
 
@@ -37,8 +38,8 @@ public interface ACDocumentView {
 	public void setScanDated(long date);
 	public long getScanDated();
 	
-	public void setTargetDated(Calendar date);
-	public Calendar getTargetDated();
+	public void setTargetDated(Date date);
+	public Date getTargetDated();
 		
     public void setText(String text);
     public String getText();
