@@ -28,6 +28,8 @@ public interface ACDocumentView {
 	public void setTargetFileName(String text);
 	public String getTargetFileName();
 	
+	public void setTargetPath(String text);
+	
 	public void setRecipient(String text);
 	public String getRecipient();
 	

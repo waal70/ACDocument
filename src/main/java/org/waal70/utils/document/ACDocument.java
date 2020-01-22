@@ -13,6 +13,7 @@ import java.util.Date;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
+import org.waal70.utils.document.convenience.Helper;
 
 /**
  * @author awaal
@@ -35,7 +36,7 @@ public class ACDocument extends GenericDocument {
 	private static Logger log = LogManager.getLogger(ACDocument.class);
 	
 	private static final String SEPARATOR = "_"; 
-	private static final String EMPTY = "LEEG";
+	private static final String EMPTY = "";
 	private String targetFileName;
 	private String recipient;
 	private String senderCompany;
@@ -171,13 +172,19 @@ public class ACDocument extends GenericDocument {
 	        log.info("Date: " + fnDate);
 	        //max = (a > b) ? a : b;  (a true, b false)
 	        fnSender = this.getSenderCompany() != null ? SEPARATOR + this.getSenderCompany() : EMPTY;
+	        if (fnSender.trim().startsWith("_@"))
+	        	fnSender=EMPTY;
 	        //
 	        log.info("Sender: " + fnSender);
 	        
 	        fnSubject = this.getDescription() != "" ? SEPARATOR + this.getDescription()  : EMPTY;
+	        if (fnSubject.trim().length()==1)
+	        	fnSubject=EMPTY;
+	        fnSubject = Helper.toValidString(fnSubject);
 	        log.info("Subject: " + fnSubject);
 	        
 	        fnTarget = this.getRecipient() != null ? SEPARATOR + this.getRecipient() : EMPTY;
+	        fnTarget = Helper.toValidString(fnTarget);
 	        log.info("Target: " + fnTarget);
 	        fnTotal = fnDate + fnSender + fnSubject + fnTarget;
 			log.info("Path: " + this.getDoctype().getPath());

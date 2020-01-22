@@ -95,7 +95,8 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		currentDocument.setTargetFileName(currentDocument.getTargetFileName());
 		currentDocument.setTitle(view.getName());
 		view.setTargetFileName(currentDocument.getTargetFileName());
-		log.info(this.currentDocument.toString());
+		view.setTargetPath(currentDocument.getDoctype().getPath());
+		//log.info(this.currentDocument.toString());
 	}
 	
 	private void populateCombos() {

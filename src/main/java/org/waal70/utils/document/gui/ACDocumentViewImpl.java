@@ -583,6 +583,12 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 		return txtSubject.getText();
 	}
 
+	@Override
+	public void setTargetPath(String text) {
+		txtTargetFolder.setText(text);
+		
+	}
+
 
 
 }
