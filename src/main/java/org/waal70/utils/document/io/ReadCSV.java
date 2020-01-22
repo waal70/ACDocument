@@ -37,6 +37,7 @@ public class ReadCSV {
                 String[] country = line.split(cvsSplitBy);
                 Company newCompany = new ApprovedCompany();
                 newCompany.setDisplayName(country[1]);
+                newCompany.setArchiveCode(country[2]);
                 acl.addCompany((ApprovedCompany) newCompany);
 
                 log.info("Companyname [code= " + country[1] + " , name=" + country[2] + "]");

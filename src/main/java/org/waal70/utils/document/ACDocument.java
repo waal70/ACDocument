@@ -4,9 +4,14 @@
 package org.waal70.utils.document;
 
 import java.awt.image.BufferedImage;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
 
 /**
@@ -27,6 +32,10 @@ public class ACDocument extends GenericDocument {
 	//private String scanFileName;
 	// for targetFileName, I will construct 20201231_<Company>_<Subject>_<Recipient>.pdf
 	
+	private static Logger log = LogManager.getLogger(ACDocument.class);
+	
+	private static final String SEPARATOR = "_"; 
+	private static final String EMPTY = "LEEG";
 	private String targetFileName;
 	private String recipient;
 	private String senderCompany;
@@ -108,22 +117,20 @@ public class ACDocument extends GenericDocument {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("{");
-		sb.append("path=").append(path);
-		sb.append(", title=").append(title);
+		sb.append("recipient=").append(recipient);
+		sb.append(", docType=").append(doctype.getOnlyPath());
+		sb.append(", senderCompany=").append(senderCompany);
 		sb.append(", description=").append(description);
-		sb.append(", author=").append(author);
-		sb.append(", permissions=").append(permissions);
-		sb.append(", created=").append(created);
-		sb.append(", lastModified=").append(lastModified == null ? null : lastModified.getTime());
-		// sb.append(", keywords=").append(keywords);
-		// sb.append(", categories=").append(categories);
+		sb.append(", title=").append(title);
 
-		sb.append(", subscribed=").append(subscribed);
+		sb.append(", path=").append(path);
+		sb.append(", targetDate=").append(targetDated);
+		sb.append(", targetFileName=").append(targetFileName);
 
-		sb.append(", uuid=").append(uuid);
-
-		// sb.append(", notes=").append(notes);
-		sb.append(", language=").append(language);
+		sb.append(", numPages").append(numPages);
+		sb.append(", fileSize").append(fileSize);
+		sb.append(", pdfVersion").append(pdfVersion);
+		sb.append(", docType").append(doctype.getOnlyPath());
 		sb.append("}");
 		return sb.toString();
 	}
@@ -146,7 +153,38 @@ public class ACDocument extends GenericDocument {
 	 * @return the targetFileName
 	 */
 	public String getTargetFileName() {
-		return targetFileName;
+		
+		//This will implement the algorithm to return
+		// the intended filename.
+		String fnTotal, fnDate, fnSender, fnSubject, fnTarget;
+		fnTotal = "";
+		if (this.getDoctype() == DocumentType.Divers)
+			return this.getTitle();
+		else
+		{
+			//Documents will follow the following naming guideline:
+			//YYYYMMDD_SenderCompany_Subject_Target.PDF
+			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+			ZoneId zone = ZoneId.systemDefault();
+			LocalDate localDate = this.getTargetDated().toInstant().atZone(zone).toLocalDate();
+			fnDate = dtf.format(localDate);
+	        log.info("Date: " + fnDate);
+	        //max = (a > b) ? a : b;  (a true, b false)
+	        fnSender = this.getSenderCompany() != null ? SEPARATOR + this.getSenderCompany() : EMPTY;
+	        //
+	        log.info("Sender: " + fnSender);
+	        
+	        fnSubject = this.getDescription() != "" ? SEPARATOR + this.getDescription()  : EMPTY;
+	        log.info("Subject: " + fnSubject);
+	        
+	        fnTarget = this.getRecipient() != null ? SEPARATOR + this.getRecipient() : EMPTY;
+	        log.info("Target: " + fnTarget);
+	        fnTotal = fnDate + fnSender + fnSubject + fnTarget;
+			log.info("Path: " + this.getDoctype().getPath());
+			log.info("Total: " + fnTotal);
+
+		}
+		return fnTotal;
 	}
 
 	/**

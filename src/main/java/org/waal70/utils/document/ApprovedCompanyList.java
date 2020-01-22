@@ -35,5 +35,16 @@ public class ApprovedCompanyList {
 		return result;
 	}
 	
+	public String getArchiveCodeforCompany(String company) {
+		String result = "";
+		for (int i=0;i<companies.size();i++)
+		{
+			if (companies.get(i).getDisplayName().equals(company))
+				result = companies.get(i).getArchiveCode();
+		}	
+		return result;
+			
+	}
+	
 
 }

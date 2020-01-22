@@ -13,5 +13,6 @@ public interface Company {
 	public String getArchiveCode();
 	
 	public void setDisplayName(String text);
+	public void setArchiveCode(String text);
 
 }

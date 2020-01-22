@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,6 +52,8 @@ public class ACDocumentFactory {
 		newDoc.setPreview(createPreviewImage(pdoc, true));
 		newDoc.setTitle(path.toFile().getName());
 		newDoc.setCreated(path.toFile().lastModified());
+		
+		newDoc.setTargetDated(new Date());
 		
 		newDoc.setPdfVersion(String.valueOf(pdoc.getVersion()));
 		newDoc.setNumPages(pdoc.getNumberOfPages());

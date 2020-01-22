@@ -54,15 +54,9 @@ public class Archive {
 			return this.fileAs;
 		}
 		
-		public static String[] getEnumForCombo() {
+		public static Recipient[] getRecipientCombo() {
 			
-			Recipient[] recipients = values();
-			String[] cmbRecps = new String[recipients.length];
-			
-			for (int i=0;i<recipients.length;i++)
-				cmbRecps[i]=recipients[i].getFileAs();
-			
-			return cmbRecps;
+			return values();
 		}
 		
 		//Overloaded in case both are the same
@@ -191,23 +185,6 @@ public class Archive {
 			return categories.toArray(new DocumentType[categories.size()]);
 			
 			
-		}
-		public static String[] getCategoryForCombo() {
-			
-			DocumentType[] doctypes = values();
-			
-			//slightly different approach because I only want the
-			//main categories
-			List<String> categories = new ArrayList<String>();
-						
-			for (int i=0;i<doctypes.length;i++)
-			{
-				//only add if parent is root!
-				if (doctypes[i].getParent() == ROOT)
-					categories.add(doctypes[i].getOnlyPath().replaceAll("_", ", "));
-			}
-			
-			return categories.toArray(new String[categories.size()]);
 		}
 		
 		public static DocumentType[] getTypeForCombo(DocumentType parentCategory) {

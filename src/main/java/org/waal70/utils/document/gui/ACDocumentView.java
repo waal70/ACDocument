@@ -4,12 +4,11 @@
 package org.waal70.utils.document.gui;
 
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
-import java.util.Calendar;
 import java.util.Date;
 
 import org.waal70.utils.document.Archive.DocumentType;
+import org.waal70.utils.document.Archive.Recipient;
 
 /**
  * @author awaal
@@ -41,19 +40,20 @@ public interface ACDocumentView {
 	public void setTargetDated(Date date);
 	public Date getTargetDated();
 		
-    public void setText(String text);
-    public String getText();
-    
     public void setCompanyCombo(String[] text);
     
     public void setCategoryCombo(DocumentType[] text);
     public void setTypeCombo(DocumentType[] text);
+    public void setRecipientCombo(Recipient[] text);
     
     public void disableTypeCombo();
 	public void enableTypeCombo();
     
     public DocumentType getTypeCombo();
     public DocumentType getCategoryCombo();
+    
+    public String getSubject();
+    
 
     public Frame getFrame();
 

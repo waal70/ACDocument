@@ -1,28 +1,29 @@
 package org.waal70.utils.document.gui;
 
+import java.awt.Component;
+import java.awt.FocusTraversalPolicy;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
-import javax.swing.JSpinner.DateEditor;
 import javax.swing.SpinnerDateModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.text.DateFormatter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
+import org.waal70.utils.document.Archive.Recipient;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -73,8 +74,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         lblSubject = new javax.swing.JLabel();
         txtSubject = new javax.swing.JTextField();
         lblRecipient = new javax.swing.JLabel();
-        cmbRecipient = new javax.swing.JComboBox<>();
-        cmbSenderCompany = new javax.swing.JComboBox();
+        cmbRecipient = new javax.swing.JComboBox<Recipient>();
+        cmbSenderCompany = new javax.swing.JComboBox<String>();
         lblMainCategory = new javax.swing.JLabel();
         cmbCategory = new javax.swing.JComboBox<DocumentType>();
         lblType = new javax.swing.JLabel();
@@ -88,7 +89,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         btnPrevious = new javax.swing.JButton();
         panelPDF = new JScrollPane();
         lblPDFPreview = new javax.swing.JLabel();
-
+        
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
                 exitForm(evt);
@@ -178,56 +179,43 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
         panelArchive.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Archive properties", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N
 
+        //txtTargetDated.setNextFocusableComponent(txtSenderCompany);
  /////BLOCK FOR TARGET DATE
         
         SimpleDateFormat datePattern = new SimpleDateFormat("dd-MM-yyyy");
         JSpinner txtTargetDated = new JSpinner(new SpinnerDateModel());
         txtTargetDated.setEditor(new JSpinner.DateEditor(txtTargetDated, datePattern.toPattern()));
-        
-        //(DateFormatter)txtTargetDated.getEditor().getTextField().getFormatter();
-        
-        
         lblTargetDated.setText("Dated:");
-       // txtTargetDated.setColumns(20);
-       // try {
-       //    MaskFormatter dateMask = new MaskFormatter("##-##-####");
-       //     dateMask.setPlaceholderCharacter('_');
-       //     dateMask.install(txtTargetDated);
-       // } catch (ParseException ex) {
-       //    log.error("Unable to parse date: " + ex.getLocalizedMessage());
-       // }
-
        
         txtTargetDated.addChangeListener(new ChangeListener() {
     		@Override
 			public void stateChanged(ChangeEvent e) {
-    			//I am going to pass it the new date
     	        controller.dateChanged((Date)txtTargetDated.getValue());
 			}
         });
+        //txtTargetDated.setFocusCycleRoot(true);
 /////BLOCK FOR TARGET DATE       
         
 
         lblSender.setText("Sender:");
+        cmbSenderCompany.addActionListener((ActionListener) controller);
 
         lblSubject.setText("Subject:");
-
         txtSubject.setText("jTextField1");
+        txtSubject.addActionListener((ActionListener) controller);
 
         lblRecipient.setText("Recipient:");
-
-        cmbRecipient.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        //cmbSenderCompany.setText("jTextField1");
+        cmbRecipient.addActionListener((ActionListener) controller);
 
         lblMainCategory.setText("Category:");
-
-        //cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cmbCategory.addActionListener((ActionListener) controller);
+        cmbCategory.addActionListener(new ActionListener () {
+        	@Override
+        	public void actionPerformed(ActionEvent e) {
+        		controller.categoryChanged(e);
+        	}
+        });
 
         lblType.setText("Type:");
-
-        //cmbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cmbType.addActionListener(new ActionListener () {
         	@Override
 			public void actionPerformed(ActionEvent e) {
@@ -243,6 +231,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         lblTargetFolder.setText("Will be filed under:");
 
         txtTargetFolder.setText("jTextField1");
+        txtTargetFolder.setEnabled(false);
+        txtTargetFolder.setEditable(false); //Informative only
 
         javax.swing.GroupLayout panelArchiveLayout = new javax.swing.GroupLayout(panelArchive);
         panelArchive.setLayout(panelArchiveLayout);
@@ -251,7 +241,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelArchiveLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelArchiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(txtTargetFolder)
+                    .addComponent(txtTargetFileName)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelArchiveLayout.createSequentialGroup()
                         .addGroup(panelArchiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblTargetDated)
@@ -263,7 +253,6 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                             .addComponent(lblTargetFileName))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                         .addGroup(panelArchiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txtTargetFileName)
                             .addComponent(cmbType, 0, 147, Short.MAX_VALUE)
                             .addComponent(cmbCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(txtTargetDated)
@@ -272,7 +261,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                             .addComponent(cmbSenderCompany,0, 147, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelArchiveLayout.createSequentialGroup()
                         .addComponent(lblTargetFolder)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(txtTargetFolder, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelArchiveLayout.setVerticalGroup(
@@ -302,28 +292,23 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                 .addGroup(panelArchiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblType)
                     .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelArchiveLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTargetFileName)
-                    .addComponent(txtTargetFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTargetFileName)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtTargetFileName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblTargetFolder)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtTargetFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(18, Short.MAX_VALUE))
         );
-
         panelActions.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Actions", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N
 
         btnNext.setText("Next");
         btnNext.addActionListener((ActionListener) controller);
-        //btnNext.addActionListener(new java.awt.event.ActionListener() {
-         //   public void actionPerformed(java.awt.event.ActionEvent evt) {
-         //       btnNextActionPerformed(evt);
-        //    }
-        //});
 
         btnPrevious.setText("Back");
+        btnPrevious.addActionListener((ActionListener) controller);
 
         javax.swing.GroupLayout panelActionsLayout = new javax.swing.GroupLayout(panelActions);
         panelActions.setLayout(panelActionsLayout);
@@ -360,7 +345,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                     .addComponent(panelArchive, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(panelActions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelPDF, javax.swing.GroupLayout.DEFAULT_SIZE, 497, Short.MAX_VALUE)
+                .addComponent(panelPDF, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -379,9 +364,24 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                 .addContainerGap())
         );
 
+        //Setting the TAB-order:
+        Vector<Component> order = new Vector<Component>(6);
+        JSpinner.DateEditor spinEdit = (JSpinner.DateEditor)txtTargetDated.getEditor();
+        order.add(spinEdit.getTextField());
+        order.add(cmbSenderCompany);
+        txtSubject.addFocusListener((FocusListener)controller);
+        order.add(txtSubject);
+        order.add(cmbRecipient);
+        order.add(cmbCategory);
+        order.add(cmbType);
+        order.add(txtTargetFileName);
+        
+        FocusTraversalPolicy newPolicy = new MainTraversalPolicy(order);
+        
         pack();
+        this.getFrame().setFocusTraversalPolicy(newPolicy);
         log.info("View after pack()");
-    }// </editor-fold>                        
+    }// </editor-fold>//GEN-END:initComponents                      
 
     /**
      * Exit the Application
@@ -395,7 +395,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private JComboBox<DocumentType> cmbCategory;
-    private javax.swing.JComboBox<String> cmbRecipient;
+    private javax.swing.JComboBox<Recipient> cmbRecipient;
     private JComboBox<DocumentType> cmbType;
     private javax.swing.JLabel lblFileSize;
     private javax.swing.JLabel lblMainCategory;
@@ -448,14 +448,13 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public void setTargetFileName(String text) {
-		// TODO Auto-generated method stub
+		txtTargetFileName.setText(text);
 		
 	}
 
 	@Override
 	public String getTargetFileName() {
-		// TODO Auto-generated method stub
-		return null;
+		return txtTargetFileName.getText();
 	}
 
 	@Override
@@ -466,8 +465,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public String getRecipient() {
-		// TODO Auto-generated method stub
-		return null;
+		return cmbRecipient.getModel().getSelectedItem().toString();
 	}
 
 	@Override
@@ -478,8 +476,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public String getSenderCompany() {
-		// TODO Auto-generated method stub
-		return null;
+		return cmbSenderCompany.getModel().getSelectedItem().toString();
 	}
 
 	@Override
@@ -505,19 +502,6 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	public Date getTargetDated() {
 		log.info("In view: " + txtTargetDated.getValue().toString());
 		return (Date) txtTargetDated.getValue();
-		//return now();
-	}
-
-	@Override
-	public void setText(String text) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getText() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -568,6 +552,13 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	}
 	
 	@Override
+	public void setRecipientCombo(Recipient[] text) {
+		DefaultComboBoxModel<Recipient> model = new DefaultComboBoxModel<Recipient>(text);
+		cmbRecipient.setModel(model);
+		
+	}
+	
+	@Override
 	public void disableTypeCombo() {
 		cmbType.setEnabled(false);
 	}
@@ -586,5 +577,12 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	public DocumentType getCategoryCombo() {
 		return (DocumentType) cmbCategory.getModel().getSelectedItem();
 	}
+
+	@Override
+	public String getSubject() {
+		return txtSubject.getText();
+	}
+
+
 
 }

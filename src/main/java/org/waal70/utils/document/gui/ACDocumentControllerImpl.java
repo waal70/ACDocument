@@ -6,14 +6,15 @@ package org.waal70.utils.document.gui;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Date;
-
-import javax.swing.event.ChangeEvent;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.Archive.DocumentType;
+import org.waal70.utils.document.Archive.Recipient;
 import org.waal70.utils.document.io.DocumentList;
 import org.waal70.utils.document.io.ReadCSV;
 
@@ -21,17 +22,14 @@ import org.waal70.utils.document.io.ReadCSV;
  * @author awaal
  *
  */
-public class ACDocumentControllerImpl implements ACDocumentController, ActionListener {
+public class ACDocumentControllerImpl implements ACDocumentController, ActionListener, FocusListener {
 	
 	
 	private static Logger log = LogManager.getLogger(ACDocumentControllerImpl.class);
 	
-	private ACDocument model;
 	private ACDocumentViewImpl view;
 	
 	private ACDocument currentDocument; 
-	
-	private DocumentType currentType;
 	
 	private DocumentList docQueue = DocumentList.getInstance(); 
 	
@@ -45,8 +43,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
     }
 	
 	private void initView() {
-		///
-		
+
 		//First, get the first document from the queue:
 		log.info("Initview about to munch on a list containing this amount of elements: " + docQueue.size());
 		
@@ -62,62 +59,67 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 				}
 			}
 		});
-		repopulate();
+		populate();
 		view.getFrame().setTitle("The AC Archive Document Processor Thingy!");
-		//view.setPDFPreview(currentDocument.getPreview());
-		//view.setText(currentDocument.getPath());
-		//view.getFrame().repaint();
 	}
 	
 	@Override
 	public ACDocumentView getView() {
-		// TODO Auto-generated method stub
 		return view;
 	}
 
-	@Override
-	public ACDocument getModel() {
-		// TODO Auto-generated method stub
-		return model;
-	}
-	private void repopulate() {
-		view.setPDFPreview(currentDocument.getPreview());
+	private void populate() {
+		// The assumption is there is a default document.
+		// On initial load of a document, this method
+		// populates all info and fillable fields
 		
-		//The read-only properties are:
+		//Read-only properties:
+		view.setPDFPreview(currentDocument.getPreview());
 		view.setScanFileName(currentDocument.getTitle());
 		view.setScanDated(currentDocument.getCreated());
 		view.setPDFVersion(currentDocument.getPdfVersion());
 		view.setNumPages(String.valueOf(currentDocument.getNumPages()));
 		view.setFileSize(currentDocument.getFileSize());
 		
-		view.setText(currentDocument.getPath());
-		view.getFrame().repaint();
-		
-		populateCombo();
+		//Initialize the user-entry properties:
+		populateCombos();
 	}
 	
-	private void populateCombo() {
+	private void updateDocument() {
+		//Walk through all settings updating the document instance
+		DocumentType newDocType = view.getTypeCombo() != null ? view.getTypeCombo() : view.getCategoryCombo();
+		currentDocument.setDoctype(newDocType);
+		currentDocument.setDescription(view.getSubject());
+		currentDocument.setRecipient(view.getRecipient());
+		currentDocument.setSenderCompany(view.getSenderCompany());
+		currentDocument.setTargetFileName(currentDocument.getTargetFileName());
+		currentDocument.setTitle(view.getName());
+		view.setTargetFileName(currentDocument.getTargetFileName());
+		log.info(this.currentDocument.toString());
+	}
+	
+	private void populateCombos() {
 		
 		//CompanyList:
 		ReadCSV csv = new ReadCSV();
 		view.setCompanyCombo(csv.populateCompanyList().getListforCombo());
 		
-		//Category:
+		//Recipients:
+		view.setRecipientCombo(Recipient.getRecipientCombo());
+		
+		//Category & Type:
 		view.setCategoryCombo(DocumentType.getCategoryCombo());
-		log.info("Category is: " + view.getCategoryCombo().getDisplayAs());
-		
-		//Type:
-		populateDependent();
-
-		
+		view.setTypeCombo(DocumentType.getTypeForCombo(view.getCategoryCombo()));
+		//populateCategoryType();
 	}
 	
 	/**
 	 * is called every time a change occurs on screen.
 	 */
-	private void populateDependent() {
+	private void populateCategoryType() {
 		
 		DocumentType currentCategory = view.getCategoryCombo();
+		log.info("currentCategory: " + currentCategory);
 		DocumentType[] cmbFill = DocumentType.getTypeForCombo(currentCategory);
 		if (cmbFill.length == 0)
 		{
@@ -134,6 +136,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			view.enableTypeCombo();
 			this.docTypeChanged();
 		}
+		this.updateDocument();
 			
 	}
 	
@@ -148,16 +151,16 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			if (currentDocument == null)
 				log.error("No more documents in queue");
 			else
-				repopulate();
+				populate();
 		}
-		populateDependent();
+		//Other than maybe next was pressed, maybe a field was updated, so save
+		// these settings
+		this.updateDocument();
 		
 	}
 	public void dateChanged(Date d) {
-		log.info("Datum gewijzigd!" + d.toString());
 		currentDocument.setTargetDated(d);
-		log.info("Date according to GUI: " + view.getTargetDated().toString());
-		log.info("Date according to document: " + currentDocument.getTargetDated().toString());
+		this.updateDocument();
 	}
 	/**
 	 * @return the currentDocument
@@ -175,18 +178,27 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		// This means the subtype has changed, set the document type accordingly
 		log.info("Type changed: " + view.getTypeCombo().getOnlyPath());
 		setCurrentType(view.getTypeCombo());
+		log.info("Effect on filename: ");
+		currentDocument.getTargetFileName();
+		this.updateDocument();
+	}
+	@Override
+	public void categoryChanged(ActionEvent e) {
+		this.categoryChanged();
 	}
 	
 	private void categoryChanged() {
 		log.info("Category changed: " + view.getCategoryCombo().getOnlyPath());
 		setCurrentType(view.getCategoryCombo());
+		populateCategoryType();
+		this.updateDocument();
 	}
 
 	/**
 	 * @return the currentType
 	 */
 	public DocumentType getCurrentType() {
-		return currentType;
+		return currentDocument.getDoctype();
 	}
 
 	/**
@@ -195,8 +207,21 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	public void setCurrentType(DocumentType currentType) {
 		//The currentType has been set, this means I also
 		// have to reflect this change in the current document:
-		this.currentType = currentType;
+		//this.currentType = currentType;
 		this.currentDocument.setDoctype(currentType);
+	}
+
+	@Override
+	public void focusGained(FocusEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void focusLost(FocusEvent e) {
+		//courtesy method to reflect the change
+		this.actionPerformed(new ActionEvent(this, 0,null));
+		
 	}
 
 }
