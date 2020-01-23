@@ -81,13 +81,16 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		view.setNumPages(String.valueOf(currentDocument.getNumPages()));
 		view.setFileSize(currentDocument.getFileSize());
 		
-		//Initialize the user-entry properties:
+		//IMPORTANT: populate the combo's before setting the
+		// calculated fields, as they depend on the combo's
 		populateCombos();
+		updateDocument();
+		
 	}
 	
 	private void updateDocument() {
 		//Walk through all settings updating the document instance
-		DocumentType newDocType = view.getTypeCombo() != null ? view.getTypeCombo() : view.getCategoryCombo();
+		DocumentType newDocType = (view.getTypeCombo() != DocumentType.EMPTY)&&(view.getTypeCombo() != null) ? view.getTypeCombo() : view.getCategoryCombo();
 		currentDocument.setDoctype(newDocType);
 		currentDocument.setDescription(view.getSubject());
 		currentDocument.setRecipient(view.getRecipient());
@@ -127,7 +130,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			//Apparently, the document type is only a parent category
 			view.setTypeCombo(new DocumentType[] {DocumentType.EMPTY});
 			view.disableTypeCombo();
-			categoryChanged();
+			//categoryChanged();
 		}
 		else
 		{

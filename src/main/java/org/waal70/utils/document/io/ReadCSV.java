@@ -45,7 +45,12 @@ public class ReadCSV {
             }
 
         } catch (IOException e) {
-            e.printStackTrace();
+        	//There is no CSV file found, so just populate with a default company:
+        	Company newCompany = new ApprovedCompany();
+        	newCompany.setDisplayName("Standaard");
+        	newCompany.setArchiveCode("Standaard");
+        	acl.addCompany((ApprovedCompany) newCompany);
+            return acl;
         }
         return acl;
 	}

@@ -184,6 +184,8 @@ public class ACDocument extends GenericDocument {
 	        log.info("Subject: " + fnSubject);
 	        
 	        fnTarget = this.getRecipient() != null ? SEPARATOR + this.getRecipient() : EMPTY;
+	        if (fnTarget.trim().length()==1)
+	        	fnTarget=EMPTY;
 	        fnTarget = Helper.toValidString(fnTarget);
 	        log.info("Target: " + fnTarget);
 	        fnTotal = fnDate + fnSender + fnSubject + fnTarget;
@@ -226,7 +228,10 @@ public class ACDocument extends GenericDocument {
 	 * @param recipient the recipient to set
 	 */
 	public void setRecipient(String recipient) {
-		this.recipient = recipient;
+		if (recipient.equals("Niemand"))
+			this.recipient = EMPTY;
+		else
+			this.recipient = recipient;
 	}
 
 	/**
