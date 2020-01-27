@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.Archive.Recipient;
+import org.waal70.utils.document.convenience.Messages;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -96,37 +97,37 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
             }
         });
 
-        panelScan.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Scan properties", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N
+        panelScan.setBorder(javax.swing.BorderFactory.createTitledBorder(null, Messages.getString("ACDocumentViewImpl.0"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N //$NON-NLS-1$ //$NON-NLS-2$
 
-        lblScanFileName.setText("Filename:");
+        lblScanFileName.setText(Messages.getString("ACDocumentViewImpl.2")); //$NON-NLS-1$
 
-        lblScanDated.setText("Scan date:");
+        lblScanDated.setText(Messages.getString("ACDocumentViewImpl.3")); //$NON-NLS-1$
 
         txtFileName.setEditable(false);
-        txtFileName.setText("jTextField1");
+        txtFileName.setText(Messages.getString("ACDocumentViewImpl.4")); //$NON-NLS-1$
         txtFileName.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txtFileName.setEnabled(false);
 
         txtScanDated.setEditable(false);
-        txtScanDated.setText("jTextField2");
+        txtScanDated.setText(Messages.getString("ACDocumentViewImpl.5")); //$NON-NLS-1$
         txtScanDated.setEnabled(false);
 
-        lblPDFVersion.setText("PDF Version:");
+        lblPDFVersion.setText(Messages.getString("ACDocumentViewImpl.6")); //$NON-NLS-1$
 
         txtPDFVersion.setEditable(false);
-        txtPDFVersion.setText("jTextField1");
+        txtPDFVersion.setText(Messages.getString("ACDocumentViewImpl.7")); //$NON-NLS-1$
         txtPDFVersion.setEnabled(false);
 
-        lblNumPages.setText("Pages:");
+        lblNumPages.setText(Messages.getString("ACDocumentViewImpl.8")); //$NON-NLS-1$
 
         txtNumPages.setEditable(false);
-        txtNumPages.setText("jTextField1");
+        txtNumPages.setText(Messages.getString("ACDocumentViewImpl.9")); //$NON-NLS-1$
         txtNumPages.setEnabled(false);
 
-        lblFileSize.setText("Size:");
+        lblFileSize.setText(Messages.getString("ACDocumentViewImpl.10")); //$NON-NLS-1$
 
         txtFileSize.setEditable(false);
-        txtFileSize.setText("jTextField1");
+        txtFileSize.setText(Messages.getString("ACDocumentViewImpl.11")); //$NON-NLS-1$
         txtFileSize.setEnabled(false);
 
         javax.swing.GroupLayout panelScanLayout = new javax.swing.GroupLayout(panelScan);
@@ -177,15 +178,15 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                 .addContainerGap(12, Short.MAX_VALUE))
         );
 
-        panelArchive.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Archive properties", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N
+        panelArchive.setBorder(javax.swing.BorderFactory.createTitledBorder(null, Messages.getString("ACDocumentViewImpl.12"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N //$NON-NLS-1$ //$NON-NLS-2$
 
         //txtTargetDated.setNextFocusableComponent(txtSenderCompany);
  /////BLOCK FOR TARGET DATE
         
-        SimpleDateFormat datePattern = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat datePattern = new SimpleDateFormat("dd-MM-yyyy"); //$NON-NLS-1$
         JSpinner txtTargetDated = new JSpinner(new SpinnerDateModel());
         txtTargetDated.setEditor(new JSpinner.DateEditor(txtTargetDated, datePattern.toPattern()));
-        lblTargetDated.setText("Dated:");
+        lblTargetDated.setText(Messages.getString("ACDocumentViewImpl.15")); //$NON-NLS-1$
        
         txtTargetDated.addChangeListener(new ChangeListener() {
     		@Override
@@ -197,17 +198,17 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 /////BLOCK FOR TARGET DATE       
         
 
-        lblSender.setText("Sender:");
+        lblSender.setText(Messages.getString("ACDocumentViewImpl.16")); //$NON-NLS-1$
         cmbSenderCompany.addActionListener((ActionListener) controller);
 
-        lblSubject.setText("Subject:");
-        txtSubject.setText("jTextField1");
+        lblSubject.setText(Messages.getString("ACDocumentViewImpl.17")); //$NON-NLS-1$
+        txtSubject.setText(Messages.getString("ACDocumentViewImpl.18")); //$NON-NLS-1$
         txtSubject.addActionListener((ActionListener) controller);
 
-        lblRecipient.setText("Recipient:");
+        lblRecipient.setText(Messages.getString("ACDocumentViewImpl.19")); //$NON-NLS-1$
         cmbRecipient.addActionListener((ActionListener) controller);
 
-        lblMainCategory.setText("Category:");
+        lblMainCategory.setText(Messages.getString("ACDocumentViewImpl.20")); //$NON-NLS-1$
         cmbCategory.addActionListener(new ActionListener () {
         	@Override
         	public void actionPerformed(ActionEvent e) {
@@ -215,7 +216,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         	}
         });
 
-        lblType.setText("Type:");
+        lblType.setText(Messages.getString("ACDocumentViewImpl.21")); //$NON-NLS-1$
         cmbType.addActionListener(new ActionListener () {
         	@Override
 			public void actionPerformed(ActionEvent e) {
@@ -224,13 +225,13 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 			}
         });
 
-        lblTargetFileName.setText("Target name:");
+        lblTargetFileName.setText(Messages.getString("ACDocumentViewImpl.22")); //$NON-NLS-1$
 
-        txtTargetFileName.setText("jTextField1");
+        txtTargetFileName.setText(Messages.getString("ACDocumentViewImpl.23")); //$NON-NLS-1$
 
-        lblTargetFolder.setText("Will be filed under:");
+        lblTargetFolder.setText(Messages.getString("ACDocumentViewImpl.24")); //$NON-NLS-1$
 
-        txtTargetFolder.setText("jTextField1");
+        txtTargetFolder.setText(Messages.getString("ACDocumentViewImpl.25")); //$NON-NLS-1$
         txtTargetFolder.setEnabled(false);
         txtTargetFolder.setEditable(false); //Informative only
 
@@ -302,12 +303,12 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                 .addComponent(txtTargetFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(18, Short.MAX_VALUE))
         );
-        panelActions.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Actions", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N
+        panelActions.setBorder(javax.swing.BorderFactory.createTitledBorder(null, Messages.getString("ACDocumentViewImpl.26"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Lucida Grande", 1, 12))); // NOI18N //$NON-NLS-1$ //$NON-NLS-2$
 
-        btnNext.setText("Next");
+        btnNext.setText(Messages.getString("ACDocumentViewImpl.28")); //$NON-NLS-1$
         btnNext.addActionListener((ActionListener) controller);
 
-        btnPrevious.setText("Back");
+        btnPrevious.setText(Messages.getString("ACDocumentViewImpl.29")); //$NON-NLS-1$
         btnPrevious.addActionListener((ActionListener) controller);
 
         javax.swing.GroupLayout panelActionsLayout = new javax.swing.GroupLayout(panelActions);
@@ -330,7 +331,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
                 .addContainerGap(42, Short.MAX_VALUE))
         );
 
-        lblPDFPreview.setText("");
+        lblPDFPreview.setText(""); //$NON-NLS-1$
        // panelPDF.add(lblPDFPreview);
         JScrollPane panelPDF = new JScrollPane(lblPDFPreview, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
@@ -380,7 +381,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         
         pack();
         this.getFrame().setFocusTraversalPolicy(newPolicy);
-        log.info("View after pack()");
+        log.info("View after pack()"); //$NON-NLS-1$
     }// </editor-fold>//GEN-END:initComponents                      
 
     /**
@@ -481,7 +482,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public void setScanDated(long date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); //$NON-NLS-1$
 		txtScanDated.setText(sdf.format(new Date(date)));
 		
 	}
@@ -500,7 +501,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public Date getTargetDated() {
-		log.info("In view: " + txtTargetDated.getValue().toString());
+		log.info("In view: " + txtTargetDated.getValue().toString()); //$NON-NLS-1$
 		return (Date) txtTargetDated.getValue();
 	}
 
@@ -586,6 +587,14 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	@Override
 	public void setTargetPath(String text) {
 		txtTargetFolder.setText(text);
+		
+	}
+
+	@Override
+	public void disableButtons() {
+		
+		btnNext.setEnabled(false);
+		btnPrevious.setEnabled(false);
 		
 	}
 

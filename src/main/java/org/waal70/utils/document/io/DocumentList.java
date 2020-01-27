@@ -6,22 +6,23 @@ package org.waal70.utils.document.io;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.ACDocumentFactory;
+import org.waal70.utils.document.convenience.Helper;
 
 /**
  * @author awaal
  *
  */
-public class DocumentList extends ConcurrentLinkedQueue<ACDocument> {
+public class DocumentList extends DocumentQueue {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1149990794295294435L;
+	int i = 1;
 
 	@Override
 	public boolean add(ACDocument e) {
@@ -52,11 +53,18 @@ public class DocumentList extends ConcurrentLinkedQueue<ACDocument> {
 		log.info("Going to construct a DocumentList...");
 		List<Path> pathList = DirectoryFileLister.listFiles();
 		//pathList now contains a list of filtered pdf files
+		if (Helper.splash != null)
+			Helper.splash.progress(i);
 		
 		pathList.forEach(path -> {
 			try {
 				log.info("Now populating Document instance for: " + path);
 				this.add(ACDocumentFactory.getACDocument(path));
+				if (Helper.splash != null)
+				{
+					i++;
+					Helper.splash.progress(i);
+				}
 			} catch (IOException e) {
 				log.error("Unable to populate queue: " + e.getLocalizedMessage());
 			}

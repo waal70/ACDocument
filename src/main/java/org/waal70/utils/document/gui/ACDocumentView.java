@@ -53,10 +53,11 @@ public interface ACDocumentView {
     
     public DocumentType getTypeCombo();
     public DocumentType getCategoryCombo();
+       
+    public void disableButtons();
     
     public String getSubject();
     
-
     public Frame getFrame();
 
 

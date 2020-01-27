@@ -7,6 +7,7 @@ import java.text.Normalizer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.waal70.utils.document.gui.SplashScreen;
 
 /**
  * @author awaal
@@ -15,6 +16,12 @@ import org.apache.logging.log4j.Logger;
 public class Helper {
 	
 	private static Logger log = LogManager.getLogger(Helper.class);
+	
+	public static SplashScreen splash;
+	
+	public static void setSplash(SplashScreen splash) {
+		Helper.splash = splash;
+	}
 	
 	public static String toValidString(String input) {
 		String int_result;

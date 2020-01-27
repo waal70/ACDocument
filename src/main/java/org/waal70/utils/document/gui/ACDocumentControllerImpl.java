@@ -10,12 +10,17 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.Archive.Recipient;
+import org.waal70.utils.document.convenience.Messages;
+import org.waal70.utils.document.io.BatchFileWriter;
 import org.waal70.utils.document.io.DocumentList;
+import org.waal70.utils.document.io.DocumentReadyList;
 import org.waal70.utils.document.io.ReadCSV;
 
 /**
@@ -33,11 +38,13 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	
 	private DocumentList docQueue = DocumentList.getInstance(); 
 	
+	private DocumentReadyList finishedDocQueue = DocumentReadyList.getInstance();
+	
 
 	public ACDocumentControllerImpl() {
         
 		//this.model = Objects.requireNonNull(model, "Model cannot be null");
-		log.info("docQueue size: " + docQueue.size());
+		log.info("docQueue size: " + docQueue.size()); //$NON-NLS-1$
 		this.view = new ACDocumentViewImpl(this);
 		initView();
     }
@@ -45,7 +52,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	private void initView() {
 
 		//First, get the first document from the queue:
-		log.info("Initview about to munch on a list containing this amount of elements: " + docQueue.size());
+		log.info("Initview about to munch on a list containing this amount of elements: " + docQueue.size()); //$NON-NLS-1$
 		
 		//retrieve the last item off the queue:
 		currentDocument = docQueue.get();
@@ -60,7 +67,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			}
 		});
 		populate();
-		view.getFrame().setTitle("The AC Archive Document Processor Thingy!");
+		view.getFrame().setTitle(Messages.getString("ACDocumentControllerImpl.2")); //$NON-NLS-1$
 	}
 	
 	@Override
@@ -89,6 +96,13 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	}
 	
 	private void updateDocument() {
+		if (currentDocument == null) {
+			//last document already off of queue, so show an option dialog to check what to do:
+			//Also, disable the buttons
+			
+			confirmNextAction();
+		}
+		else {
 		//Walk through all settings updating the document instance
 		DocumentType newDocType = (view.getTypeCombo() != DocumentType.EMPTY)&&(view.getTypeCombo() != null) ? view.getTypeCombo() : view.getCategoryCombo();
 		currentDocument.setDoctype(newDocType);
@@ -100,6 +114,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		view.setTargetFileName(currentDocument.getTargetFileName());
 		view.setTargetPath(currentDocument.getDoctype().getPath());
 		//log.info(this.currentDocument.toString());
+		}
 	}
 	
 	private void populateCombos() {
@@ -123,7 +138,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	private void populateCategoryType() {
 		
 		DocumentType currentCategory = view.getCategoryCombo();
-		log.info("currentCategory: " + currentCategory);
+		log.info("currentCategory: " + currentCategory); //$NON-NLS-1$
 		DocumentType[] cmbFill = DocumentType.getTypeForCombo(currentCategory);
 		if (cmbFill.length == 0)
 		{
@@ -135,7 +150,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		else
 		{
 			//The document type is a subtype
-			log.info("Setting new doctype: ");
+			log.info("Setting new doctype: "); //$NON-NLS-1$
 			view.setTypeCombo(DocumentType.getTypeForCombo(currentCategory));
 			view.enableTypeCombo();
 			this.docTypeChanged();
@@ -147,13 +162,19 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		log.info("Action things were done: " + e.getSource().toString() + ":" + e.getActionCommand() + e.paramString());
-		if (e.getActionCommand() == "Next")
+		log.info("Action things were done: " + e.getSource().toString() + ":" + e.getActionCommand() + e.paramString()); //$NON-NLS-1$ //$NON-NLS-2$
+		log.info("actionCommand " + e.getActionCommand()); //$NON-NLS-1$
+		if (e.getActionCommand().equals("Next")) //$NON-NLS-1$
 		{
-			log.info("requesting new doc off of queue");
+			//This means I am done with the current document,
+			// so enqueue it on the ready queue
+			// do one last update:
+			this.updateDocument();
+			finishedDocQueue.add(currentDocument);
+			log.info("Requesting new doc off of queue"); //$NON-NLS-1$
 			currentDocument = docQueue.get();
 			if (currentDocument == null)
-				log.error("No more documents in queue");
+				log.error("No more documents in queue"); //$NON-NLS-1$
 			else
 				populate();
 		}
@@ -180,9 +201,9 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	@Override
 	public void docTypeChanged(ActionEvent e) {
 		// This means the subtype has changed, set the document type accordingly
-		log.info("Type changed: " + view.getTypeCombo().getOnlyPath());
+		log.info("Type changed: " + view.getTypeCombo().getOnlyPath()); //$NON-NLS-1$
 		setCurrentType(view.getTypeCombo());
-		log.info("Effect on filename: ");
+		log.info("Effect on filename: "); //$NON-NLS-1$
 		currentDocument.getTargetFileName();
 		this.updateDocument();
 	}
@@ -192,7 +213,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	}
 	
 	private void categoryChanged() {
-		log.info("Category changed: " + view.getCategoryCombo().getOnlyPath());
+		log.info("Category changed: " + view.getCategoryCombo().getOnlyPath()); //$NON-NLS-1$
 		setCurrentType(view.getCategoryCombo());
 		populateCategoryType();
 		this.updateDocument();
@@ -226,6 +247,28 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		//courtesy method to reflect the change
 		this.actionPerformed(new ActionEvent(this, 0,null));
 		
+	}
+	
+	private void confirmNextAction() {
+		this.getView().disableButtons();
+        Object[] options = {Messages.getString("ACDocumentControllerImpl.14"), Messages.getString("ACDocumentControllerImpl.15")}; //$NON-NLS-1$ //$NON-NLS-2$
+        int n = JOptionPane.showOptionDialog(view.getFrame(),
+                        Messages.getString("ACDocumentControllerImpl.16") + finishedDocQueue.size(), //$NON-NLS-1$
+                        Messages.getString("ACDocumentControllerImpl.17"), //$NON-NLS-1$
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+        if (n == JOptionPane.YES_OPTION) {
+        	log.info("Yes chosen, processing batch file..."); //$NON-NLS-1$
+        	BatchFileWriter bfw = new BatchFileWriter();
+        	bfw.processQueue(finishedDocQueue);
+        } else if (n == JOptionPane.NO_OPTION) {
+            log.info("I don't like them, either."); //$NON-NLS-1$
+        } else {
+            log.info("Come on -- 'fess up!"); //$NON-NLS-1$
+        }
 	}
 
 }

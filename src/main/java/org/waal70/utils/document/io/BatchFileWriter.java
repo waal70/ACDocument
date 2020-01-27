@@ -4,10 +4,15 @@
 package org.waal70.utils.document.io;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.waal70.utils.document.ACDocument;
 
 /**
  * @author awaal
@@ -21,16 +26,19 @@ public class BatchFileWriter {
 	private String tmpFolder = System.getProperty("java.io.tmpdir");
 	private static Logger log = LogManager.getLogger(BatchFileWriter.class);
 	
+	private File myFile;
+	private FileWriter fw;
 	private final String fileName = "moveDocs.bat";
 	
 	private static final String moveCommandWIN = "MOVE -Y";
 	private static final String moveCommandNIX = "mv -y";
 	
-	public void clearFile() {
+	private void clearFile() {
 		
-		File myFile;
 		try {
 			myFile = File.createTempFile("moveDocs", ".bat", null);
+			log.info("Location is " + tmpFolder);
+			fw = new FileWriter(myFile);
 		} catch (IOException e) {
 			log.error("Cannot create temp file " + e.getLocalizedMessage());
 		}
@@ -38,8 +46,17 @@ public class BatchFileWriter {
 		
 	}
 	
-	public boolean addEntry() {
+	public BatchFileWriter() {
+		super();
+		clearFile();
+	}
+	
+	private void addEntry(ACDocument doc) {
 		
+		
+		//Current filename is getTitle()
+		// Target is getPath();
+		log.info("Entry: " + doc.getTitle() + doc.getPath() + doc.getTargetFileName());
 		String moveCommand = "";
 		String entryToWrite = "";
 		if (System.getProperty("os.name").startsWith("Windows"))
@@ -50,7 +67,56 @@ public class BatchFileWriter {
 		
 		entryToWrite = moveCommand;
 		
-		return true;
+		
+	}
+	public void processQueue(DocumentReadyList docQueue) {
+		//process the queue
+		log.info("Going to process " + docQueue.size() + " document(s).");
+		writeHeader();
+		Iterator<ACDocument> dqi = docQueue.iterator();
+		dqi.forEachRemaining(document -> {
+			addEntry(document);
+        });
+		writeFooter();
+		closeAll();
+		
+	}
+	
+	private void closeAll() {
+		try {
+			fw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void writeHeader() {
+		
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy 'at' HH:mm:ss");
+		ZonedDateTime zdt = ZonedDateTime.now();
+		String datumFormat = dtf.format(zdt);
+		
+		
+			addToFile("REM " + datumFormat + " : file created===========");
+	
+	}
+	
+	private void writeFooter() {
+		addToFile("REM End of File===================");
+		
+	}
+	
+	private void addToFile(String text) {
+		if (fw!=null && myFile !=null)
+		{
+			try {
+				fw.append(text);
+				fw.append("\r\n");
+			} catch (IOException e) {
+				log.error("Cannot write to file ");
+			}
+		}
 	}
 
 }
