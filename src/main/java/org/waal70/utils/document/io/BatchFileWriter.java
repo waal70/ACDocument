@@ -13,6 +13,7 @@ import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
+import org.waal70.utils.document.convenience.MainProperties;
 
 /**
  * @author awaal
@@ -28,16 +29,15 @@ public class BatchFileWriter {
 	
 	private File myFile;
 	private FileWriter fw;
-	private final String fileName = "moveDocs.bat";
 	
-	private static final String moveCommandWIN = "MOVE -Y";
-	private static final String moveCommandNIX = "mv -y";
+	private static final String moveCommandWIN = "MOVE /Y";
+	private static final String moveCommandNIX = "mv -f";
 	
 	private void clearFile() {
 		
 		try {
 			myFile = File.createTempFile("moveDocs", ".bat", null);
-			log.info("Location is " + tmpFolder);
+			log.info("Location of batchfile is: " + tmpFolder);
 			fw = new FileWriter(myFile);
 		} catch (IOException e) {
 			log.error("Cannot create temp file " + e.getLocalizedMessage());
@@ -56,16 +56,18 @@ public class BatchFileWriter {
 		
 		//Current filename is getTitle()
 		// Target is getPath();
-		log.info("Entry: " + doc.getTitle() + doc.getPath() + doc.getTargetFileName());
+		log.info("Entry: " + MainProperties.getInstance().getSourcePath() + doc.getTitle() + "-->" + MainProperties.getInstance().getTargetBase() + doc.getPath() + File.separator + doc.getTargetFileName());
 		String moveCommand = "";
-		String entryToWrite = "";
+		String strSource = MainProperties.getInstance().getSourcePath() + doc.getTitle();
+		String strDestination = MainProperties.getInstance().getTargetBase() + doc.getPath() + File.separator + doc.getTargetFileName(); 
 		if (System.getProperty("os.name").startsWith("Windows"))
 			moveCommand = BatchFileWriter.moveCommandWIN;
 		else
 			moveCommand = BatchFileWriter.moveCommandNIX;
 		
 		
-		entryToWrite = moveCommand;
+		String entryToWrite = moveCommand + " " + strSource + " " + strDestination;
+		addToFile(entryToWrite);
 		
 		
 	}

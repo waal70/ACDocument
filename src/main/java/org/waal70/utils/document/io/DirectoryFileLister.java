@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.waal70.utils.document.convenience.MainProperties;
 
 
 /**
@@ -25,9 +26,7 @@ public class DirectoryFileLister {
 	private static Logger log = LogManager.getLogger(DirectoryFileLister.class);
 
 	public static List<Path> listFiles() {
-		String dirname = "/Users/awaal/TEMP/PDF/";
-		if (System.getProperty("os.name").startsWith("Windows"))
-			dirname = "C:\\pdf\\";
+		String dirname = MainProperties.getInstance().getSourcePath();
 
 		List<Path> result = new ArrayList<Path>();
 		Stream<Path> str;

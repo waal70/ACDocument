@@ -110,7 +110,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		currentDocument.setRecipient(view.getRecipient());
 		currentDocument.setSenderCompany(view.getSenderCompany());
 		currentDocument.setTargetFileName(currentDocument.getTargetFileName());
-		currentDocument.setTitle(view.getName());
+		currentDocument.setTitle(view.getScanFileName());
 		view.setTargetFileName(currentDocument.getTargetFileName());
 		view.setTargetPath(currentDocument.getDoctype().getPath());
 		//log.info(this.currentDocument.toString());

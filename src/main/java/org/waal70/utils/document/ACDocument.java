@@ -23,6 +23,12 @@ import org.waal70.utils.document.convenience.Helper;
  */
 public class ACDocument extends GenericDocument {
 
+	@Override
+	public String getPath() {
+		// TODO Auto-generated method stub
+		return this.getDoctype().getPath();
+	}
+
 	/**
 	 * 
 	 */
@@ -188,7 +194,7 @@ public class ACDocument extends GenericDocument {
 	        	fnTarget=EMPTY;
 	        fnTarget = Helper.toValidString(fnTarget);
 	        log.info("Target: " + fnTarget);
-	        fnTotal = fnDate + fnSender + fnSubject + fnTarget;
+	        fnTotal = fnDate + fnSender + fnSubject + fnTarget + ".pdf";
 			log.info("Path: " + this.getDoctype().getPath());
 			log.info("Total: " + fnTotal);
 

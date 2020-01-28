@@ -443,8 +443,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public String getScanFileName() {
-		// TODO Auto-generated method stub
-		return null;
+		return txtFileName.getText();
 	}
 
 	@Override
