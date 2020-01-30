@@ -19,6 +19,7 @@ import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.Archive.Recipient;
 import org.waal70.utils.document.convenience.Messages;
 import org.waal70.utils.document.io.BatchFileWriter;
+import org.waal70.utils.document.io.BatchFileWriterFactory;
 import org.waal70.utils.document.io.DocumentList;
 import org.waal70.utils.document.io.DocumentReadyList;
 import org.waal70.utils.document.io.ReadCSV;
@@ -262,7 +263,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
                         options[0]);
         if (n == JOptionPane.YES_OPTION) {
         	log.info("Yes chosen, processing batch file..."); //$NON-NLS-1$
-        	BatchFileWriter bfw = new BatchFileWriter();
+        	BatchFileWriter bfw = BatchFileWriterFactory.getBatchFileWriter();
         	bfw.processQueue(finishedDocQueue);
         } else if (n == JOptionPane.NO_OPTION) {
             log.info("I don't like them, either."); //$NON-NLS-1$
