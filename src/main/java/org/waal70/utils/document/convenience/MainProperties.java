@@ -50,6 +50,15 @@ public class MainProperties {
 		return dirname;
     }
     
+    public String getFilename() {
+    	return prop.getProperty("batchfile") != null ? prop.getProperty("batchfile") : "No file found";
+    }
+    
+    public void setFilename(String myFile) {
+    	prop.setProperty("batchfile", myFile);
+    	
+    }
+    
     private void loadProperties() {
 	
 	String propFileName = "acdocument.properties";

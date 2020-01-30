@@ -18,6 +18,7 @@ public abstract class BatchFileWriter {
 
 	protected File myFile;
 	protected FileWriter fw;
+	protected String tmpFolder = System.getProperty("java.io.tmpdir");
 	
 	protected String moveCommand = "should have been re-defined";
 

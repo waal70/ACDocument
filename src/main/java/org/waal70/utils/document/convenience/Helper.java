@@ -3,6 +3,7 @@
  */
 package org.waal70.utils.document.convenience;
 
+import java.io.IOException;
 import java.text.Normalizer;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,6 +34,24 @@ public class Helper {
 		int_result = int_result.replaceAll("[^\\p{ASCII}]", "");
 		log.info("Normalized result is: " + int_result);
 		return int_result;
+	}
+	
+	public static void openExplorer() {
+		log.debug("fileToOpen is: " + MainProperties.getInstance().getFilename());
+		String fileToOpen = MainProperties.getInstance().getFilename();
+		
+		//TODO: check whether this implementation makes sense for windows systems
+		try {
+		if (System.getProperty("os.name").startsWith("Windows"))
+				Runtime.getRuntime().exec("explorer.exe /select," + fileToOpen);
+		else
+			Runtime.getRuntime().exec("open --reveal " + fileToOpen);
+		}
+		catch (IOException e)
+		{
+			log.error("Error " + e.getLocalizedMessage());
+		}
+		
 	}
 
 }

@@ -24,6 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.Archive.Recipient;
+import org.waal70.utils.document.convenience.Helper;
 import org.waal70.utils.document.convenience.Messages;
 
 /*
@@ -387,7 +388,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     /**
      * Exit the Application
      */
-    private void exitForm(java.awt.event.WindowEvent evt) {                          
+    private void exitForm(java.awt.event.WindowEvent evt) {
+    	Helper.openExplorer();
         System.exit(0);
     }                         
 
