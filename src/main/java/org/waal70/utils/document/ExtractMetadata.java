@@ -3,11 +3,16 @@
  */
 package org.waal70.utils.document;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.stream.Collectors;
+
+
 
 /**
  * @author awaal
@@ -29,7 +34,6 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -38,6 +42,7 @@ import org.apache.xmpbox.XMPMetadata;
 import org.apache.xmpbox.schema.AdobePDFSchema;
 import org.apache.xmpbox.schema.DublinCoreSchema;
 import org.apache.xmpbox.schema.XMPBasicSchema;
+import org.apache.xmpbox.schema.XMPSchema;
 import org.apache.xmpbox.xml.DomXmpParser;
 import org.apache.xmpbox.xml.XmpParsingException;
 
@@ -78,7 +83,7 @@ public final class ExtractMetadata
                     DomXmpParser xmpParser = new DomXmpParser();
                     try
                     {
-                        XMPMetadata metadata = xmpParser.parse(meta.createInputStream());
+                        XMPMetadata metadata = xmpParser.parse(meta.exportXMPMetadata());
 
                         DublinCoreSchema dc = metadata.getDublinCoreSchema();
                         if (dc != null)
@@ -109,7 +114,8 @@ public final class ExtractMetadata
                     catch (XmpParsingException e)
                     {
                         System.err.println("An error ouccred when parsing the meta data: "
-                                + e.getMessage());
+                                + e.getLocalizedMessage());
+                        //e.printStackTrace();
                     }
                 }
                 else

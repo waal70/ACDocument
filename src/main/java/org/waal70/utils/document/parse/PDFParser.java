@@ -12,6 +12,11 @@ import java.nio.file.Path;
 import java.util.Date;
 import java.util.Set;
 
+import javax.management.modelmbean.XMLParseException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -20,10 +25,19 @@ import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.common.PDMetadata;
 import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
+import org.apache.xmpbox.XMPMetadata;
+import org.apache.xmpbox.schema.XMPSchema;
+import org.apache.xmpbox.schema.XMPSchemaFactory;
+import org.apache.xmpbox.xml.DomXmpParser;
+import org.apache.xmpbox.xml.XmpParsingException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.waal70.utils.document.ACDocument;
+import org.waal70.utils.document.ExtractMetadata;
 import org.waal70.utils.document.convenience.DateUtils;
 import org.waal70.utils.document.metadata.ACCoreProperties.EmbeddedResourceType;
 import org.waal70.utils.document.metadata.Metadata;
+import org.xml.sax.SAXException;
 
 /**
  * @author awaal Wraps PDDocument to parse ACDocument-like PDFs
@@ -41,16 +55,16 @@ public class PDFParser {
 		return newDoc;
 	}
 
-	public PDFParser(Path path) throws IOException {
+	public PDFParser(Path path) throws IOException, ParserConfigurationException, SAXException {
 		log.info("PDF Parser created");
 		parse(path);
 	}
 
-	private void parse(Path path) throws IOException {
+	private void parse(Path path) throws IOException, ParserConfigurationException, SAXException {
 
 		PDDocument pdoc;
 		pdoc = PDDocument.load(path.toFile());
-	
+		
 		newDoc.setPreview(createPreviewImage(pdoc, true));
 		md.set(Metadata.EMBEDDED_RESOURCE_TYPE, EmbeddedResourceType.ATTACHMENT.toString());
 		md.set(Metadata.EMBEDDED_RESOURCE_TYPE_KEY, "preview");
@@ -78,8 +92,7 @@ public class PDFParser {
 		
 		//newDoc.setFileSize(path.toFile().length() / (1024 * 1024) + "MB");
 		md.set(Metadata.DOC_INFO_SIZE, path.toFile().length() / (1024 * 1024) + "MB");
-		log.info("All recorded metadata: " + md.toString());
-		
+		log.info("All recorded metadata ====================================================\n" + md.toString() + "\n==========================================================================");
 		newDoc.setMetadata(md);
 		
 		log.info("Processing a PDF with " + pdoc.getNumberOfPages() + " pages, according to " + pdoc.getVersion()
@@ -88,32 +101,27 @@ public class PDFParser {
 		if (pdoc.getVersion() < 2) {
 			// get information via
 			PDDocumentInformation pdi = pdoc.getDocumentInformation();
-			log.info("Properties according to pdi: " + pdi.toString());
-			log.info("Author: " + pdi.getAuthor());
-			log.info("getCreator: " + pdi.getCreator());
-			log.info("getKeywords: " + pdi.getKeywords());
-			log.info("getProducer: " + pdi.getProducer());
-			log.info("getSubject: " + pdi.getSubject());
-			log.info("getTitle: " + pdi.getTitle());
-			log.info("getTrapped: " + pdi.getTrapped());
-			//log.info("getCreationDate: " + pdi.getCreationDate().toString());
-			log.info("getModificationDate: " + pdi.getModificationDate());
 			Set<String> ss = pdi.getMetadataKeys();
+			
 			for (String entry : ss) {
-				log.info("mdkeys: " + entry.toString());
+				log.info("mdkeys: " + entry.toString() + "=" + pdi.getCustomMetadataValue(entry));
 			}
-
-		} else {
+		} 
+		else {
 			// get information via metadata
 			PDDocumentCatalog pcat = pdoc.getDocumentCatalog();
 			PDMetadata pmeta = pcat.getMetadata();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(pmeta.createInputStream()));
-			StringBuffer sb = new StringBuffer();
-			String str = "";
-			while ((str = reader.readLine()) != null) {
-				sb.append(str);
-			}
-			log.info(sb.toString());
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = null;
+			builder = factory.newDocumentBuilder();
+			Document xmDoc = builder.parse(pmeta.createInputStream());
+			
+			XMPMetadata metadata = XMPMetadata.createXMPMetadata();
+			XMPSchema xms = new XMPSchema(metadata);
+			//metadata.addSchema();
+			 
+			//DomXmpParser xmp = new DomXmpParser();
+			
 
 		}
 		pdoc.close();

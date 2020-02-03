@@ -40,7 +40,6 @@ public class Helper {
 		log.debug("fileToOpen is: " + MainProperties.getInstance().getFilename());
 		String fileToOpen = MainProperties.getInstance().getFilename();
 		
-		//TODO: check whether this implementation makes sense for windows systems
 		try {
 		if (System.getProperty("os.name").startsWith("Windows"))
 				Runtime.getRuntime().exec("explorer.exe /select," + fileToOpen);

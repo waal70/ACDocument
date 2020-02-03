@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.ACDocumentFactory;
 import org.waal70.utils.document.convenience.Helper;
+import org.xml.sax.SAXException;
 
 /**
  * @author awaal
@@ -65,7 +68,7 @@ public class DocumentList extends DocumentQueue {
 					i++;
 					Helper.splash.progress(i);
 				}
-			} catch (IOException e) {
+			} catch (IOException | ParserConfigurationException | SAXException e) {
 				log.error("Unable to populate queue: " + e.getLocalizedMessage());
 			}
 		});
