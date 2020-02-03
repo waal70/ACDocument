@@ -96,7 +96,7 @@ public class PDFParser {
 			log.info("getSubject: " + pdi.getSubject());
 			log.info("getTitle: " + pdi.getTitle());
 			log.info("getTrapped: " + pdi.getTrapped());
-			log.info("getCreationDate: " + pdi.getCreationDate().toString());
+			//log.info("getCreationDate: " + pdi.getCreationDate().toString());
 			log.info("getModificationDate: " + pdi.getModificationDate());
 			Set<String> ss = pdi.getMetadataKeys();
 			for (String entry : ss) {
