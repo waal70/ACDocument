@@ -183,7 +183,14 @@ public class Archive {
 					categories.add(doctypes[i]);
 			}
 			return categories.toArray(new DocumentType[categories.size()]);
-			
+		}
+		
+		public static String[] getAllTypes() {
+			DocumentType[] doctypes = values();
+			List<String> textTypes = new ArrayList<String>();
+			for (int i=0;i<doctypes.length;i++)
+				textTypes.add(doctypes[i].name());
+			return textTypes.toArray(new String[textTypes.size()]);
 			
 		}
 		

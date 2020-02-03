@@ -14,6 +14,7 @@ import org.waal70.utils.document.gui.ACDocumentController;
 import org.waal70.utils.document.gui.ACDocumentControllerImpl;
 import org.waal70.utils.document.gui.SplashScreen;
 import org.waal70.utils.document.io.DirectoryFileLister;
+import org.waal70.utils.document.metadata.Metadata;
 
 /**
  * @author awaal
@@ -37,6 +38,11 @@ public class Main {
 		// TODO: Restructure packages/classes
 		// TODO: ...
 		log.debug("Started the program. Handing over to GUI: "); //$NON-NLS-1$
+		
+		//Metadata md = new Metadata();
+		//md.add(ACCoreProperties.CONTRIBUTOR, "awaal");
+		
+		
 		doGUI();
 	}
 

@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.convenience.Helper;
+import org.waal70.utils.document.metadata.Metadata;
 
 /**
  * @author awaal
@@ -43,6 +44,13 @@ public class ACDocument extends GenericDocument {
 	
 	private static final String SEPARATOR = "_"; 
 	private static final String EMPTY = "";
+	
+	private Metadata metadata;
+	
+	public void setMetadata(Metadata md) {
+		metadata = md;
+	}
+	
 	private String targetFileName;
 	private String recipient;
 	private String senderCompany;
