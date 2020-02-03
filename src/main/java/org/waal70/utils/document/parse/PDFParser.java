@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.config.Property;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -23,7 +22,6 @@ import org.apache.pdfbox.rendering.ImageType;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.convenience.DateUtils;
-import org.waal70.utils.document.metadata.ACCoreProperties;
 import org.waal70.utils.document.metadata.ACCoreProperties.EmbeddedResourceType;
 import org.waal70.utils.document.metadata.Metadata;
 
@@ -34,6 +32,7 @@ public class PDFParser {
 	private static Logger log = LogManager.getLogger(PDFParser.class);
 	
 	private ACDocument newDoc = new ACDocument();
+	private Metadata md = new Metadata();
 
 	/**
 	 * @return the newDoc
@@ -49,37 +48,36 @@ public class PDFParser {
 
 	private void parse(Path path) throws IOException {
 
-		Metadata md = new Metadata();
 		PDDocument pdoc;
 		pdoc = PDDocument.load(path.toFile());
 	
 		newDoc.setPreview(createPreviewImage(pdoc, true));
-		md.set(ACCoreProperties.EMBEDDED_RESOURCE_TYPE, EmbeddedResourceType.ATTACHMENT.toString());
-		md.set(ACCoreProperties.EMBEDDED_RESOURCE_TYPE_KEY, "preview");
+		md.set(Metadata.EMBEDDED_RESOURCE_TYPE, EmbeddedResourceType.ATTACHMENT.toString());
+		md.set(Metadata.EMBEDDED_RESOURCE_TYPE_KEY, "preview");
 		md.setPreview(newDoc.getPreview());
 		
-		newDoc.setTitle(path.toFile().getName());
+		//newDoc.setTitle(path.toFile().getName());
 		
 		md.set(Metadata.DOC_INFO_TITLE, path.toFile().getName());
-		md.set(ACCoreProperties.TITLE, path.toFile().getName());
+		md.set(Metadata.TITLE, path.toFile().getName());
 		
-		newDoc.setCreated(path.toFile().lastModified());
+		//newDoc.setTargetDated(path.toFile().lastModified());
 		Date ff = new Date(path.toFile().lastModified());
-		md.set(ACCoreProperties.CREATED, DateUtils.formatDate(ff));
+		md.set(Metadata.CREATED, DateUtils.formatDate(ff));
 		
-		newDoc.setTargetDated(new Date());
-		md.set(ACCoreProperties.DATED, DateUtils.formatDate(new Date()));
+		//newDoc.setTargetDated(new Date());
+		md.set(Metadata.DATED, DateUtils.formatDate(new Date()));
 
-		newDoc.setPdfVersion(String.valueOf(pdoc.getVersion()));
+		//newDoc.setPdfVersion(String.valueOf(pdoc.getVersion()));
 		md.set(Metadata.PDF_VERSION, String.valueOf(pdoc.getVersion()));
 		
 		
-		newDoc.setNumPages(pdoc.getNumberOfPages());
-		md.set(ACCoreProperties.DOC_INFO_PAGES, pdoc.getNumberOfPages() );
+		//newDoc.setNumPages(pdoc.getNumberOfPages());
+		md.set(Metadata.DOC_INFO_PAGES, pdoc.getNumberOfPages() );
 
 		
-		newDoc.setFileSize(path.toFile().length() / (1024 * 1024) + "MB");
-		md.set(ACCoreProperties.DOC_INFO_SIZE, path.toFile().length() / (1024 * 1024) + "MB");
+		//newDoc.setFileSize(path.toFile().length() / (1024 * 1024) + "MB");
+		md.set(Metadata.DOC_INFO_SIZE, path.toFile().length() / (1024 * 1024) + "MB");
 		log.info("All recorded metadata: " + md.toString());
 		
 		newDoc.setMetadata(md);
@@ -109,9 +107,6 @@ public class PDFParser {
 			// get information via metadata
 			PDDocumentCatalog pcat = pdoc.getDocumentCatalog();
 			PDMetadata pmeta = pcat.getMetadata();
-			log.info("stream length: " + pmeta.getDecodedStreamLength());
-			log.info("Buffered reader");
-
 			BufferedReader reader = new BufferedReader(new InputStreamReader(pmeta.createInputStream()));
 			StringBuffer sb = new StringBuffer();
 			String str = "";

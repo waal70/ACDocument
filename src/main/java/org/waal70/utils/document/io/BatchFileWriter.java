@@ -11,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.convenience.MainProperties;
+import org.waal70.utils.document.metadata.Metadata;
 
 public abstract class BatchFileWriter {
 	
@@ -30,11 +31,12 @@ public abstract class BatchFileWriter {
 	
 		// Current filename is getTitle()
 		// Target is getPath();
-		log.info("Entry: " + MainProperties.getInstance().getSourcePath() + doc.getTitle() + "-->"
-				+ MainProperties.getInstance().getTargetBase() + doc.getPath() + File.separator
+		//log.info(doc.toString());
+		log.info("Entry: " + MainProperties.getInstance().getSourcePath() + doc.getMetadata().get(Metadata.TITLE) + "-->"
+				+ MainProperties.getInstance().getTargetBase() + doc.getDoctype().getPath() + File.separator
 				+ doc.getTargetFileName());
-		String strSource = MainProperties.getInstance().getSourcePath() + doc.getTitle();
-		String strDestination = MainProperties.getInstance().getTargetBase() + doc.getPath() + File.separator
+		String strSource = MainProperties.getInstance().getSourcePath() + doc.getMetadata().get(Metadata.TITLE);
+		String strDestination = MainProperties.getInstance().getTargetBase() + doc.getDoctype().getPath() + File.separator
 				+ doc.getTargetFileName();
 			
 		String entryToWrite = moveCommand + " " + strSource + " " + strDestination;

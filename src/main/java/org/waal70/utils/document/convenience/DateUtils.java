@@ -49,11 +49,11 @@ package org.waal70.utils.document.convenience;
 	     * map to "2012-02-17" if interpreted in say Pacific time (while the
 	     * default mapping would result in "2012-02-16" for UTC-8).
 	     */
-	    public static final TimeZone MIDDAY = TimeZone.getTimeZone("GMT-12:00");
+	    public static final TimeZone MIDDAY = TimeZone.getTimeZone("CET");
 
 	    private static DateFormat createDateFormat(String format, TimeZone timezone) {
 	        final SimpleDateFormat sdf =
-	                new SimpleDateFormat(format, new DateFormatSymbols(Locale.US));
+	                new SimpleDateFormat(format, new DateFormatSymbols(Locale.GERMANY));
 	        if (timezone != null) {
 	            sdf.setTimeZone(timezone);
 	        }
@@ -94,7 +94,7 @@ package org.waal70.utils.document.convenience;
 	     * @return ISO 8601 date string, including timezone details
 	     */
 	    public static String formatDate(Date date) {
-	        Calendar calendar = GregorianCalendar.getInstance(UTC, Locale.US);
+	    	Calendar calendar = GregorianCalendar.getInstance();
 	        calendar.setTime(date);
 	        return doFormatDateArchive(calendar);
 	    }
@@ -121,7 +121,7 @@ package org.waal70.utils.document.convenience;
 	     */
 	    public static String formatDateUnknownTimezone(Date date) {
 	        // Create the Calendar object in the system timezone
-	        Calendar calendar = GregorianCalendar.getInstance(TimeZone.getDefault(), Locale.US);
+	        Calendar calendar = GregorianCalendar.getInstance(TimeZone.getDefault(), Locale.GERMANY);
 	        calendar.setTime(date);
 	        // Have it formatted
 	        String formatted = formatDate(calendar);
@@ -146,7 +146,7 @@ package org.waal70.utils.document.convenience;
 	                Locale.ROOT,
 	                "%02d-%02d-%04d",
 	                calendar.get(Calendar.DAY_OF_MONTH),
-	                calendar.get(Calendar.MONTH) + 1,
+	                calendar.get(Calendar.MONTH)+1,
 	                calendar.get(Calendar.YEAR));
 	    	//,
 	        //        calendar.get(Calendar.HOUR_OF_DAY),

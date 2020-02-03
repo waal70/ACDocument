@@ -93,4 +93,13 @@ public interface PDF {
      * Has > 0 AcroForm fields
      */
     Property HAS_ACROFORM_FIELDS = Property.internalBoolean(PDF_PREFIX+"hasAcroFormFields");
+    
+    /**
+     * Size of the PDF file
+     */
+    Property DOC_INFO_SIZE = Property.externalText(PDF_DOC_INFO_CUSTOM_PREFIX+"size");
+    /**
+     * Number of pages as determined by the PDF's page size
+     */
+    Property DOC_INFO_PAGES = Property.externalInteger(PDF_DOC_INFO_CUSTOM_PREFIX+"pages");
 }

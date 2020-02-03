@@ -36,8 +36,8 @@ public interface ACDocumentView {
 	public void setSenderCompany(String text);
 	public String getSenderCompany();
 	
-	public void setScanDated(long date);
-	public long getScanDated();
+	public void setScanDated(String date);
+	public String getScanDated();
 	
 	public void setTargetDated(Date date);
 	public Date getTargetDated();

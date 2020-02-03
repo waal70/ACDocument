@@ -17,12 +17,14 @@ import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.Archive.Recipient;
+import org.waal70.utils.document.convenience.DateUtils;
 import org.waal70.utils.document.convenience.Messages;
 import org.waal70.utils.document.io.BatchFileWriter;
 import org.waal70.utils.document.io.BatchFileWriterFactory;
 import org.waal70.utils.document.io.DocumentList;
 import org.waal70.utils.document.io.DocumentReadyList;
 import org.waal70.utils.document.io.ReadCSV;
+import org.waal70.utils.document.metadata.Metadata;
 
 /**
  * @author awaal
@@ -36,6 +38,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	private ACDocumentViewImpl view;
 	
 	private ACDocument currentDocument; 
+	//private Metadata metadata;
 	
 	private DocumentList docQueue = DocumentList.getInstance(); 
 	
@@ -57,6 +60,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 		//retrieve the last item off the queue:
 		currentDocument = docQueue.get();
+		//Andre new since the introduction of metadata:
 		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -81,13 +85,20 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		// On initial load of a document, this method
 		// populates all info and fillable fields
 		
-		//Read-only properties:
-		view.setPDFPreview(currentDocument.getPreview());
-		view.setScanFileName(currentDocument.getTitle());
-		view.setScanDated(currentDocument.getCreated());
-		view.setPDFVersion(currentDocument.getPdfVersion());
-		view.setNumPages(String.valueOf(currentDocument.getNumPages()));
-		view.setFileSize(currentDocument.getFileSize());
+		//Read-only properties, get them through the metadata:
+		Metadata md = currentDocument.getMetadata();
+		
+		view.setPDFPreview(md.getPreview());
+		
+		view.setScanFileName(md.get(Metadata.TITLE));
+		
+		view.setScanDated(md.get(Metadata.CREATED));
+		
+		view.setPDFVersion(md.get(Metadata.PDF_VERSION));
+		
+		view.setNumPages(md.get(Metadata.DOC_INFO_PAGES));
+		
+		view.setFileSize(md.get(Metadata.DOC_INFO_SIZE));
 		
 		//IMPORTANT: populate the combo's before setting the
 		// calculated fields, as they depend on the combo's
@@ -106,15 +117,30 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		else {
 		//Walk through all settings updating the document instance
 		DocumentType newDocType = (view.getTypeCombo() != DocumentType.EMPTY)&&(view.getTypeCombo() != null) ? view.getTypeCombo() : view.getCategoryCombo();
-		currentDocument.setDoctype(newDocType);
-		currentDocument.setDescription(view.getSubject());
-		currentDocument.setRecipient(view.getRecipient());
-		currentDocument.setSenderCompany(view.getSenderCompany());
-		currentDocument.setTargetFileName(currentDocument.getTargetFileName());
-		currentDocument.setTitle(view.getScanFileName());
+		Metadata md = currentDocument.getMetadata();
+		md.set(Metadata.DOC_TYPE, newDocType.name());
+		//currentDocument.setDoctype(newDocType);
+		
+		md.set(Metadata.DESCRIPTION, view.getSubject());
+		//currentDocument.setDescription(view.getSubject());
+		
+		md.set(Metadata.RECIPIENT, view.getRecipient());
+		//currentDocument.setRecipient(view.getRecipient());
+		
+		md.set(Metadata.CREATOR, view.getSenderCompany());
+		//currentDocument.setSenderCompany(view.getSenderCompany());
+		
+		md.set(Metadata.RESOURCE_NAME_KEY, currentDocument.getTargetFileName());
+		//currentDocument.setTargetFileName(currentDocument.getTargetFileName());
+		
+		md.set(Metadata.TITLE, view.getScanFileName());
+		md.set(Metadata.DOC_INFO_TITLE, view.getScanFileName());
+		//currentDocument.setTitle(view.getScanFileName());
+		
 		view.setTargetFileName(currentDocument.getTargetFileName());
 		view.setTargetPath(currentDocument.getDoctype().getPath());
 		//log.info(this.currentDocument.toString());
+		log.info("Metadata is now: " + md.toString());
 		}
 	}
 	
@@ -185,7 +211,11 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 	}
 	public void dateChanged(Date d) {
-		currentDocument.setTargetDated(d);
+		//Need to format it into dd-MM-yyyy:
+		Metadata md = currentDocument.getMetadata();
+		md.set(Metadata.DATED, DateUtils.formatDate(d));
+		currentDocument.setMetadata(md);
+		//currentDocument.setTargetDated(d);
 		this.updateDocument();
 	}
 	/**
@@ -234,7 +264,9 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		//The currentType has been set, this means I also
 		// have to reflect this change in the current document:
 		//this.currentType = currentType;
-		this.currentDocument.setDoctype(currentType);
+		Metadata md = currentDocument.getMetadata();
+		md.set(Metadata.DOC_TYPE, currentType.name());
+		currentDocument.setMetadata(md);
 	}
 
 	@Override

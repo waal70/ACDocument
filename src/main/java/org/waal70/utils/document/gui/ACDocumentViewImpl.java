@@ -482,16 +482,15 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	}
 
 	@Override
-	public void setScanDated(long date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); //$NON-NLS-1$
-		txtScanDated.setText(sdf.format(new Date(date)));
+	public void setScanDated(String date) {
+		//SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); //$NON-NLS-1$
+		txtScanDated.setText(date);
 		
 	}
 
 	@Override
-	public long getScanDated() {
-		// TODO Auto-generated method stub
-		return 0;
+	public String getScanDated() {
+		return "0";
 	}
 
 	@Override

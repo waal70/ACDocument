@@ -44,7 +44,7 @@ import org.waal70.utils.document.metadata.Property.PropertyType;
 /**
  * A multi-valued metadata container.
  */
-public class Metadata implements PDF, Serializable {
+public class Metadata implements PDF, ACCoreProperties, Serializable {
 
     /** Serial version UID */
     private static final long serialVersionUID = 5623926545693153182L;
@@ -567,7 +567,7 @@ public class Metadata implements PDF, Serializable {
             String[] values = _getValues(names[i]);
             for (int j = 0; j < values.length; j++) {
             	if (buf.length() > 0) {
-            		buf.append(" ");
+            		buf.append(",\n");
             	}
                 buf.append(names[i]).append("=").append(values[j]);
             }

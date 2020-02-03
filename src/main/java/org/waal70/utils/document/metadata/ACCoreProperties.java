@@ -211,10 +211,8 @@ public interface ACCoreProperties {
       Property DATED = DublinCore.DATE;
       
       //Properties for the AC Archive
-      
-      Property DOC_INFO_SIZE = Property.externalText(AC_META_PREFIX+"size");
-      Property DOC_INFO_PAGES = Property.externalInteger(AC_META_PREFIX+"pages");
-      Property DOC_TYPE = Property.externalClosedChoice(AC_META_PREFIX +"doctype", Archive.DocumentType.getAllTypes());
+       Property DOC_TYPE = Property.externalClosedChoice(AC_META_PREFIX +"doctype", Archive.DocumentType.getAllTypes());
+       Property RECIPIENT = Property.externalText(AC_META_PREFIX+"recipient");
       
      /** 
       * @see DublinCore#MODIFIED
