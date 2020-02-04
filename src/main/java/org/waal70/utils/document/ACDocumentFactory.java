@@ -13,6 +13,8 @@ import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.parse.PDFParser;
 import org.xml.sax.SAXException;
 
+import com.adobe.internal.xmp.XMPException;
+
 /**
  * @author awaal
  *
@@ -20,7 +22,7 @@ import org.xml.sax.SAXException;
 public class ACDocumentFactory {
 	private static Logger log = LogManager.getLogger(ACDocumentFactory.class);
 
-	public static ACDocument getACDocument(Path path) throws IOException, ParserConfigurationException, SAXException {
+	public static ACDocument getACDocument(Path path) throws IOException, ParserConfigurationException, SAXException, XMPException {
 		
 		log.info("In Document Factory for " + path.toString());
 		

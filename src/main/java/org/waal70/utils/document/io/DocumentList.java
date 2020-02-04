@@ -16,6 +16,8 @@ import org.waal70.utils.document.ACDocumentFactory;
 import org.waal70.utils.document.convenience.Helper;
 import org.xml.sax.SAXException;
 
+import com.adobe.internal.xmp.XMPException;
+
 /**
  * @author awaal
  *
@@ -68,7 +70,7 @@ public class DocumentList extends DocumentQueue {
 					i++;
 					Helper.splash.progress(i);
 				}
-			} catch (IOException | ParserConfigurationException | SAXException e) {
+			} catch (IOException | ParserConfigurationException | SAXException | XMPException e) {
 				log.error("Unable to populate queue: " + e.getLocalizedMessage());
 			}
 		});
