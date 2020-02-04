@@ -76,10 +76,11 @@ public interface ACCoreProperties {
      * metadata about the parsing process.
      * In AC 2.0 (or earlier?), let's change X-ParsedBy to X-AC-Parsed-By.
      */
-    public static String AC_META_PREFIX = "X-ARCH"+NAMESPACE_PREFIX_DELIMITER;
+    public static String AC_META_PREFIX = "x-arch"+NAMESPACE_PREFIX_DELIMITER;
     
     public static String XMP_PREFIX = "xmp"+ NAMESPACE_PREFIX_DELIMITER;
 
+    public static String PDI_PREFIX = PDF.PDF_PREFIX + "pdi" + NAMESPACE_PREFIX_DELIMITER;
     /**
      * Use this to store parse exception information in the Metadata object.
      */

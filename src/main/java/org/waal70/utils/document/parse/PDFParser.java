@@ -4,7 +4,6 @@
 package org.waal70.utils.document.parse;
 
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -52,18 +51,29 @@ public class PDFParser {
 		}
 		if (pdoc != null) {
 			newDoc.setPreview(createPreviewImage(pdoc, true));
+			
 			md.set(Metadata.EMBEDDED_RESOURCE_TYPE, EmbeddedResourceType.ATTACHMENT.toString());
 			md.set(Metadata.EMBEDDED_RESOURCE_TYPE_KEY, "preview");
 			md.setPreview(newDoc.getPreview());
+			
+			//PDFTextStripper pdfts;
+			//try {
+			//	pdfts = new PDFTextStripper();
+			//	String text = pdfts.getText(pdoc);
+			//	log.info("Stripped text is: " + text);
+			//} catch (IOException e1) {
+				// TODO Auto-generated catch block
+			//	e1.printStackTrace();
+			//}
+			
 
 
 			md.set(Metadata.DOC_INFO_TITLE, path.toFile().getName());
 			md.set(Metadata.TITLE, path.toFile().getName());
 
-
 			Date ff = new Date(path.toFile().lastModified());
 			md.set(Metadata.CREATED, DateUtils.formatDate(ff));
-
+			
 			md.set(Metadata.DATED, DateUtils.formatDate(new Date()));
 
 			md.set(Metadata.PDF_VERSION, String.valueOf(pdoc.getVersion()));
@@ -77,7 +87,7 @@ public class PDFParser {
 
 			PDFMetadataExtracter pme = new PDFMetadataExtracter(md);
 			Metadata r_md = null;
-			r_md = pme.doStuff(pdoc);
+			r_md = pme.extractFromDocument(pdoc);
 			try {
 				pdoc.close();
 			} catch (IOException e) {

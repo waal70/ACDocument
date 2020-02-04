@@ -4,13 +4,11 @@
 package org.waal70.utils.document;
 
 import java.awt.image.BufferedImage;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.Archive.Recipient;
+import org.waal70.utils.document.convenience.DateUtils;
 import org.waal70.utils.document.convenience.Helper;
 import org.waal70.utils.document.metadata.Metadata;
 
@@ -82,12 +80,7 @@ public class ACDocument extends Document {
 		{
 			//Documents will follow the following naming guideline:
 			//YYYYMMDD_SenderCompany_Subject_Target.PDF
-			//convert String to LocalDate
-			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-			LocalDate localDate = LocalDate.parse(this.getMetadata().get(Metadata.DATED),dtf);
-			
-			dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
-			fnDate = dtf.format(localDate);
+			fnDate = DateUtils.formatDateToFilename(this.getMetadata().get(Metadata.DATED));
 	        log.debug("Date: " + fnDate);
 	        //max = (a > b) ? a : b;  (a true, b false)
 	        fnSender = this.getMetadata().get(Metadata.CREATOR) != null ? SEPARATOR + this.getMetadata().get(Metadata.CREATOR) : EMPTY;

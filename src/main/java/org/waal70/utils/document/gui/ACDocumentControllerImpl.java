@@ -92,7 +92,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 		view.setScanFileName(md.get(Metadata.TITLE));
 		
-		view.setScanDated(md.get(Metadata.CREATED));
+		view.setScanDated(DateUtils.formatDateToDisplay(md.get(Metadata.CREATED)));
 		
 		view.setPDFVersion(md.get(Metadata.PDF_VERSION));
 		
@@ -211,11 +211,12 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 	}
 	public void dateChanged(Date d) {
-		//Need to format it into dd-MM-yyyy:
+		// The spinner is dumb and always sends a date
+		// at 0:00, so, increment the time with 12 hours.
+		
 		Metadata md = currentDocument.getMetadata();
-		md.set(Metadata.DATED, DateUtils.formatDate(d));
+		md.set(Metadata.DATED, DateUtils.formatDateAddTime(d));
 		currentDocument.setMetadata(md);
-		//currentDocument.setTargetDated(d);
 		this.updateDocument();
 	}
 	/**

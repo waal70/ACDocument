@@ -7,16 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * @author awaal
  *
  */
 public class ApprovedCompanyList {
 	
-	private static Logger log = LogManager.getLogger(ApprovedCompanyList.class);
 	//contains the list of read companies
 	private List<ApprovedCompany> companies = new ArrayList<ApprovedCompany>();
 	
@@ -30,7 +26,8 @@ public class ApprovedCompanyList {
 		
 		for (int i=0;i<companies.size();i++) 
 			result[i] = companies.get(i).getDisplayName();
-		
+		//Perform an alphabetical sort, because it is prettier
+		// in the combobox
 		Arrays.sort(result);
 		return result;
 	}

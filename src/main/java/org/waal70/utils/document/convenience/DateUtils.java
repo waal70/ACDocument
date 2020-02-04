@@ -28,6 +28,10 @@ package org.waal70.utils.document.convenience;
 	import java.util.Locale;
 	import java.util.TimeZone;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
 	/**
 	 * Date related utility methods and constants
 	 */
@@ -49,8 +53,9 @@ package org.waal70.utils.document.convenience;
 	     * map to "2012-02-17" if interpreted in say Pacific time (while the
 	     * default mapping would result in "2012-02-16" for UTC-8).
 	     */
-	    public static final TimeZone MIDDAY = TimeZone.getTimeZone("CET");
+	    public static final TimeZone MIDDAY = TimeZone.getTimeZone("GMT-12:00");
 
+	    private static Logger log = LogManager.getLogger(DateUtils.class);
 	    private static DateFormat createDateFormat(String format, TimeZone timezone) {
 	        final SimpleDateFormat sdf =
 	                new SimpleDateFormat(format, new DateFormatSymbols(Locale.GERMANY));
@@ -89,14 +94,29 @@ package org.waal70.utils.document.convenience;
 	     * Returns a ISO 8601 representation of the given date. This method
 	     * is thread safe and non-blocking.
 	     *
-	     * @see <a href="https://issues.apache.org/jira/browse/TIKA-495">TIKA-495</a>
 	     * @param date given date
 	     * @return ISO 8601 date string, including timezone details
 	     */
 	    public static String formatDate(Date date) {
-	    	Calendar calendar = GregorianCalendar.getInstance();
+	    	Calendar calendar = GregorianCalendar.getInstance(UTC, Locale.GERMANY);
 	        calendar.setTime(date);
-	        return doFormatDateArchive(calendar);
+	        return doFormatDate(calendar);
+	    }
+	    
+	    /**
+	     * Returns a ISO 8601 representation of the given date,
+	     * after adding 12 hours to deal with JSpinners. This method
+	     * is thread safe and non-blocking.
+	     *
+	     * @param date given date
+	     * @return ISO 8601 date string, including timezone details
+	     */
+	    public static String formatDateAddTime(Date date) {
+	    	Calendar calendar = GregorianCalendar.getInstance(UTC, Locale.GERMANY);
+	    	calendar.setTime(date);
+	    	calendar.add(Calendar.HOUR_OF_DAY, 12);
+	    	return doFormatDate(calendar);
+	    	
 	    }
 	    /**
 	     * Returns a ISO 8601 representation of the given date. This method
@@ -109,7 +129,7 @@ package org.waal70.utils.document.convenience;
 	    public static String formatDate(Calendar date) {
 	        // Explicitly switch it into UTC before formatting
 	        date.setTimeZone(UTC);
-	        return doFormatDateArchive(date);
+	        return doFormatDate(date);
 	    }
 	    /**
 	     * Returns a ISO 8601 representation of the given date, which is
@@ -128,8 +148,28 @@ package org.waal70.utils.document.convenience;
 	        // Strip the timezone details before returning
 	        return formatted.substring(0, formatted.length()-1);
 	    }
-	    @SuppressWarnings("unused")
-		private static String doFormatDate(Calendar calendar) {
+
+	    
+	    public static String formatDateToDisplay (String date) {
+	    	
+	    	DateUtils du = new DateUtils();
+	    	Date temp = du.tryToParse(date);
+	    	SimpleDateFormat datePattern = new SimpleDateFormat("dd-MM-yyyy");
+	    	
+	    	return datePattern.format(temp);
+	    }
+	    
+	    public static String formatDateToFilename (String date) {
+	    	//This method receives a ISO8601 and returns yyyyMMdd
+	    	SimpleDateFormat datePattern = new SimpleDateFormat("yyyyMMdd");
+	    	DateUtils du = new DateUtils();
+	    	Date temp = du.tryToParse(date);
+	    	log.info("formatDateToFilename " + datePattern.format(temp));
+	    	return datePattern.format(temp);
+	    }
+	    
+	    
+	    private static String doFormatDate(Calendar calendar) {
 	        return String.format(
 	                Locale.ROOT,
 	                "%04d-%02d-%02dT%02d:%02d:%02dZ",
@@ -141,20 +181,6 @@ package org.waal70.utils.document.convenience;
 	                calendar.get(Calendar.SECOND));
 	    }
 	    
-	    private static String doFormatDateArchive(Calendar calendar) {
-	    	return String.format(
-	                Locale.ROOT,
-	                "%02d-%02d-%04d",
-	                calendar.get(Calendar.DAY_OF_MONTH),
-	                calendar.get(Calendar.MONTH)+1,
-	                calendar.get(Calendar.YEAR));
-	    	//,
-	        //        calendar.get(Calendar.HOUR_OF_DAY),
-	        //        calendar.get(Calendar.MINUTE),
-	        //        calendar.get(Calendar.SECOND));
-	    }
-	    
-
 	    /**
 	     * Tries to parse the date string; returns null if no parse was possible.
 	     *

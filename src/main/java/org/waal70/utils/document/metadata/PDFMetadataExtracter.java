@@ -4,6 +4,7 @@
 package org.waal70.utils.document.metadata;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -36,18 +37,25 @@ public class PDFMetadataExtracter {
 	}
 	
   	
-	public Metadata doStuff(PDDocument pdoc) {
+	public Metadata extractFromDocument(PDDocument pdoc) {
+		
+		log.info("Now processing metadata...");
 
 		if (pdoc.getVersion() < 2f) {
 			// get information via
 			PDDocumentInformation pdi = pdoc.getDocumentInformation();
 			Set<String> ss = pdi.getMetadataKeys();
+			log.debug("Metadata keys: " + ss.size());
+			String prefix = ACCoreProperties.PDI_PREFIX;
+			Iterator<String> itr = ss.iterator();
 
-			for (String entry : ss)
-				md.add(entry, pdi.getCustomMetadataValue(entry));
+			while(itr.hasNext()){
+				String currentKey = itr.next();
+				md.add(prefix+currentKey, pdi.getCustomMetadataValue(currentKey));
+			}
 
 		} else {
-			// get information via metadata
+			// get information via metadata-stream
 			PDDocumentCatalog pcat = pdoc.getDocumentCatalog();
 			PDMetadata pmeta = pcat.getMetadata();
 

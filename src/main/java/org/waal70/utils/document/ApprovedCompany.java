@@ -22,13 +22,11 @@ public class ApprovedCompany implements Company {
 
 	@Override
 	public String getDisplayName() {
-		// TODO Auto-generated method stub
 		return displayName;
 	}
 
 	@Override
 	public String getArchiveCode() {
-		// TODO Auto-generated method stub
 		return archiveCode;
 	}
 

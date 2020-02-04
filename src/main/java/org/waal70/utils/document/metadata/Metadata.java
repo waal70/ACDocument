@@ -1,4 +1,4 @@
-package org.waal70.utils.document.metadata;
+ package org.waal70.utils.document.metadata;
 
 import java.awt.image.BufferedImage;
 
