@@ -48,7 +48,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	public ACDocumentControllerImpl() {
         
 		//this.model = Objects.requireNonNull(model, "Model cannot be null");
-		log.info("docQueue size: " + docQueue.size()); //$NON-NLS-1$
+		log.debug("docQueue size: " + docQueue.size()); //$NON-NLS-1$
 		this.view = new ACDocumentViewImpl(this);
 		initView();
     }
@@ -56,7 +56,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	private void initView() {
 
 		//First, get the first document from the queue:
-		log.info("Initview about to munch on a list containing this amount of elements: " + docQueue.size()); //$NON-NLS-1$
+		log.info("Total number of documents waiting to be processed: " + docQueue.size()); //$NON-NLS-1$
 		
 		//retrieve the last item off the queue:
 		currentDocument = docQueue.get();
@@ -140,7 +140,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		view.setTargetFileName(currentDocument.getTargetFileName());
 		view.setTargetPath(currentDocument.getDoctype().getPath());
 		//log.info(this.currentDocument.toString());
-		log.info("Metadata is now: " + md.toString());
+		log.info("After updateDocument(), metadata is now: \n" + md.toString());
 		}
 	}
 	
@@ -177,7 +177,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		else
 		{
 			//The document type is a subtype
-			log.info("Setting new doctype: "); //$NON-NLS-1$
+			log.debug("Setting new doctype: "); //$NON-NLS-1$
 			view.setTypeCombo(DocumentType.getTypeForCombo(currentCategory));
 			view.enableTypeCombo();
 			this.docTypeChanged();
@@ -189,8 +189,8 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		log.info("Action things were done: " + e.getSource().toString() + ":" + e.getActionCommand() + e.paramString()); //$NON-NLS-1$ //$NON-NLS-2$
-		log.info("actionCommand " + e.getActionCommand()); //$NON-NLS-1$
+		log.debug("Action things were done: " + e.getSource().toString() + ":" + e.getActionCommand() + e.paramString()); //$NON-NLS-1$ //$NON-NLS-2$
+		log.debug("actionCommand " + e.getActionCommand()); //$NON-NLS-1$
 		if (e.getActionCommand().equals("Next")) //$NON-NLS-1$
 		{
 			//This means I am done with the current document,
@@ -198,10 +198,10 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			// do one last update:
 			this.updateDocument();
 			finishedDocQueue.add(currentDocument);
-			log.info("Requesting new doc off of queue"); //$NON-NLS-1$
+			log.info("Moving to next document in queue..."); //$NON-NLS-1$
 			currentDocument = docQueue.get();
 			if (currentDocument == null)
-				log.error("No more documents in queue"); //$NON-NLS-1$
+				log.error("No more documents in queue!"); //$NON-NLS-1$
 			else
 				populate();
 		}
@@ -232,9 +232,9 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	@Override
 	public void docTypeChanged(ActionEvent e) {
 		// This means the subtype has changed, set the document type accordingly
-		log.info("Type changed: " + view.getTypeCombo().getOnlyPath()); //$NON-NLS-1$
+		log.debug("Type changed: " + view.getTypeCombo().getOnlyPath()); //$NON-NLS-1$
 		setCurrentType(view.getTypeCombo());
-		log.info("Effect on filename: "); //$NON-NLS-1$
+		log.debug("Effect on filename: "); //$NON-NLS-1$
 		currentDocument.getTargetFileName();
 		this.updateDocument();
 	}
@@ -244,7 +244,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	}
 	
 	private void categoryChanged() {
-		log.info("Category changed: " + view.getCategoryCombo().getOnlyPath()); //$NON-NLS-1$
+		log.debug("Category changed: " + view.getCategoryCombo().getOnlyPath()); //$NON-NLS-1$
 		setCurrentType(view.getCategoryCombo());
 		populateCategoryType();
 		this.updateDocument();
@@ -294,13 +294,13 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
                         options,
                         options[0]);
         if (n == JOptionPane.YES_OPTION) {
-        	log.info("Yes chosen, processing batch file..."); //$NON-NLS-1$
+        	log.info("User said YES, creating batch-file."); //$NON-NLS-1$
         	BatchFileWriter bfw = BatchFileWriterFactory.getBatchFileWriter();
         	bfw.processQueue(finishedDocQueue);
         } else if (n == JOptionPane.NO_OPTION) {
-            log.info("I don't like them, either."); //$NON-NLS-1$
+            log.info("User said NO, do nothing."); //$NON-NLS-1$
         } else {
-            log.info("Come on -- 'fess up!"); //$NON-NLS-1$
+            log.info("User managed to hit a non-existing button!"); //$NON-NLS-1$
         }
 	}
 

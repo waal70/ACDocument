@@ -382,7 +382,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         
         pack();
         this.getFrame().setFocusTraversalPolicy(newPolicy);
-        log.info("View after pack()"); //$NON-NLS-1$
+        log.debug("View after pack()"); //$NON-NLS-1$
     }// </editor-fold>//GEN-END:initComponents                      
 
     /**

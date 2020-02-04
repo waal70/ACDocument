@@ -32,7 +32,7 @@ public class Helper {
 		int_result = Normalizer.normalize(int_result, Normalizer.Form.NFD);
 	
 		int_result = int_result.replaceAll("[^\\p{ASCII}]", "");
-		log.info("Normalized result is: " + int_result);
+		log.debug("Normalized result is: " + int_result);
 		return int_result;
 	}
 	

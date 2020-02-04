@@ -4,6 +4,7 @@
 package org.waal70.utils.document.parse;
 
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -37,7 +38,7 @@ public class PDFParser {
 	}
 
 	public PDFParser(Path path) {
-		log.info("PDF Parser created");
+		log.debug("PDF Parser created");
 		parse(path);
 	}
 
@@ -55,42 +56,38 @@ public class PDFParser {
 			md.set(Metadata.EMBEDDED_RESOURCE_TYPE_KEY, "preview");
 			md.setPreview(newDoc.getPreview());
 
-			// newDoc.setTitle(path.toFile().getName());
 
 			md.set(Metadata.DOC_INFO_TITLE, path.toFile().getName());
 			md.set(Metadata.TITLE, path.toFile().getName());
 
-			// newDoc.setTargetDated(path.toFile().lastModified());
+
 			Date ff = new Date(path.toFile().lastModified());
 			md.set(Metadata.CREATED, DateUtils.formatDate(ff));
 
-			// newDoc.setTargetDated(new Date());
 			md.set(Metadata.DATED, DateUtils.formatDate(new Date()));
 
-			// newDoc.setPdfVersion(String.valueOf(pdoc.getVersion()));
 			md.set(Metadata.PDF_VERSION, String.valueOf(pdoc.getVersion()));
 
-			// newDoc.setNumPages(pdoc.getNumberOfPages());
 			md.set(Metadata.DOC_INFO_PAGES, pdoc.getNumberOfPages());
 
-			// newDoc.setFileSize(path.toFile().length() / (1024 * 1024) + "MB");
 			md.set(Metadata.DOC_INFO_SIZE, path.toFile().length() / (1024 * 1024) + "MB");
-			log.info("All recorded metadata ====================================================\n" + md.toString()
-					+ "\n==========================================================================");
-			newDoc.setMetadata(md);
 
-			log.info("Processing a PDF with " + pdoc.getNumberOfPages() + " pages, according to " + pdoc.getVersion()
+			log.info("This is a PDF with " + pdoc.getNumberOfPages() + " pages, according to " + pdoc.getVersion()
 					+ " spec");
 
-			PDFMetadataExtracter pme = new PDFMetadataExtracter();
-			pme.doStuff(pdoc);
+			PDFMetadataExtracter pme = new PDFMetadataExtracter(md);
+			Metadata r_md = null;
+			r_md = pme.doStuff(pdoc);
 			try {
 				pdoc.close();
 			} catch (IOException e) {
 				log.error("Cannot close PDDocument " + e.getLocalizedMessage());
 			}
+			newDoc.setMetadata(r_md);
+			log.debug("All recorded metadata ====================================================\n" + md.toString()
+			+ "\n==========================================================================");
+
 		}
-		// return newDoc;
 	}
 
 	private static BufferedImage createPreviewImage(PDDocument doc, boolean allPages) {
@@ -99,6 +96,10 @@ public class PDFParser {
 		// try and save the preview:
 		if (!allPages)
 			return createPreviewFirstPage(doc);
+		
+		//Andre: suppress suggestion on JAVA version by setting this system property
+		System.setProperty("sun.java2d.cmm", "sun.java2d.cmm.kcms.KcmsServiceProvider");
+		//Andre END
 		PDFRenderer renderer = new PDFRenderer(doc);
 		BufferedImage[] pageImages = new BufferedImage[doc.getNumberOfPages()];
 

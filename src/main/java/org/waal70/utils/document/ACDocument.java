@@ -88,28 +88,28 @@ public class ACDocument extends Document {
 			
 			dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
 			fnDate = dtf.format(localDate);
-	        log.info("Date: " + fnDate);
+	        log.debug("Date: " + fnDate);
 	        //max = (a > b) ? a : b;  (a true, b false)
 	        fnSender = this.getMetadata().get(Metadata.CREATOR) != null ? SEPARATOR + this.getMetadata().get(Metadata.CREATOR) : EMPTY;
 	        if (fnSender.trim().startsWith("_@"))
 	        	fnSender=EMPTY;
 	        //
-	        log.info("Sender: " + fnSender);
+	        log.debug("Sender: " + fnSender);
 	        
 	        fnSubject = this.getMetadata().get(Metadata.DESCRIPTION) != "" ? SEPARATOR + this.getMetadata().get(Metadata.DESCRIPTION) : EMPTY;
 	        if (fnSubject.trim().length()==1)
 	        	fnSubject=EMPTY;
 	        fnSubject = Helper.toValidString(fnSubject);
-	        log.info("Subject: " + fnSubject);
+	        log.debug("Subject: " + fnSubject);
 	        
 	        fnTarget = this.getMetadata().get(Metadata.RECIPIENT) != null ? SEPARATOR + this.getMetadata().get(Metadata.RECIPIENT) : EMPTY;
 	        if (fnTarget.equals(SEPARATOR + Recipient.NOBODY.getDisplayAs()) || fnTarget.contentEquals(SEPARATOR + Recipient.ALL.getDisplayAs()))
 	        	fnTarget = EMPTY;
 	        fnTarget = Helper.toValidString(fnTarget);
-	        log.info("Target: " + fnTarget);
+	        log.debug("Target: " + fnTarget);
 	        fnTotal = fnDate + fnSender + fnSubject + fnTarget + ".pdf";
-			log.info("Path: " + this.getDoctype().getPath());
-			log.info("Total: " + fnTotal);
+			log.debug("Path: " + this.getDoctype().getPath());
+			log.info(this.getMetadata().get(Metadata.TITLE) + "->" + fnTotal);
 		}
 		return fnTotal;
 	}

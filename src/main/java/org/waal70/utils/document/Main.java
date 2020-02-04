@@ -28,11 +28,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		// TODO: Externalize settings or make it programmable
 		// TODO: Third level on certain document types (pop-up?)
-		// TODO: -> Algorithm to determine file name
-		// TODO: Create batch file to move files or let the app do it
-		// TODO: Run findbugs/spotbugs
 		// TODO: Restructure packages/classes
 		// TODO: ...
 		log.debug("Started the program. Handing over to GUI: "); //$NON-NLS-1$

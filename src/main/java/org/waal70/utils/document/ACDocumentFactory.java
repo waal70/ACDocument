@@ -24,7 +24,7 @@ public class ACDocumentFactory {
 
 	public static ACDocument getACDocument(Path path) throws IOException, ParserConfigurationException, SAXException, XMPException {
 		
-		log.info("In Document Factory for " + path.toString());
+		log.debug("In Document Factory for " + path.toString());
 		
 		if (path.toFile().toString().toLowerCase().endsWith("pdf"))
 		{

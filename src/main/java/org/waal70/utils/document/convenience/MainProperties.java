@@ -33,7 +33,7 @@ public class MainProperties {
     }
     
     public String getSourcePath() {
-    	log.info("SourcePath: " + prop.get("SourcePath"));
+    	log.debug("SourcePath: " + prop.get("SourcePath"));
 		String dirname = "/Users/awaal/TEMP/PDF/";
 		if (System.getProperty("os.name").startsWith("Windows"))
 			dirname = "C:\\pdf\\";
@@ -43,7 +43,7 @@ public class MainProperties {
     public String getTargetBase() {
     	
     	//Primarily, get the config'd property:
-    	log.info("TargetBase: " + prop.get("TargetBase"));
+    	log.debug("TargetBase: " + prop.get("TargetBase"));
 		String dirname = "/Users/awaal/TEMP/PDF/";
 		if (System.getProperty("os.name").startsWith("Windows"))
 			dirname = "C:\\pdf\\";
@@ -69,8 +69,7 @@ public class MainProperties {
 		try {
 			prop.load(inputStream);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Cannot load property-file: " + propFileName);
 		}
 	} 
 

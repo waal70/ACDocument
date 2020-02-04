@@ -28,16 +28,23 @@ import com.adobe.internal.xmp.properties.XMPProperty;
  */
 public class PDFMetadataExtracter {
 	private static Logger log = LogManager.getLogger(PDFMetadataExtracter.class);
+	private Metadata md = null;
+	
+	
+	public PDFMetadataExtracter (Metadata metadata) {
+		this.md = metadata;
+	}
+	
+  	
+	public Metadata doStuff(PDDocument pdoc) {
 
-	public void doStuff(PDDocument pdoc) {
-
-		if (pdoc.getVersion() < 2) {
+		if (pdoc.getVersion() < 2f) {
 			// get information via
 			PDDocumentInformation pdi = pdoc.getDocumentInformation();
 			Set<String> ss = pdi.getMetadataKeys();
 
 			for (String entry : ss)
-				log.info("mdkeys: " + entry.toString() + "=" + pdi.getCustomMetadataValue(entry));
+				md.add(entry, pdi.getCustomMetadataValue(entry));
 
 		} else {
 			// get information via metadata
@@ -64,10 +71,10 @@ public class PDFMetadataExtracter {
 				extractXMPMetadata(xmp);
 			}
 		}
-
+		return md;
 	}
 
-	private void extractMetadata(XMPMeta xmp, String namespace, String[] cycleOptions) {
+	private void extractMetadata(XMPMeta xmp, String namespace, String prefix, String[] cycleOptions) {
 
 		for (String optionName : cycleOptions) {
 
@@ -78,10 +85,9 @@ public class PDFMetadataExtracter {
 				if (xmpp != null) {
 					PropertyOptions propOptions = xmpp.getOptions();
 					if (propOptions.isArray())
-						log.info(optionName + ": " + xmp.getArrayItem(namespace, optionName, XMPConst.ARRAY_LAST_ITEM));
-					else {
-						log.info(optionName + ": " + xmp.getPropertyString(namespace, optionName));
-					}
+						md.add(prefix + optionName, xmp.getArrayItem(namespace, optionName, XMPConst.ARRAY_LAST_ITEM).getValue());
+					else 
+						md.add(prefix + optionName, xmp.getPropertyString(namespace, optionName));
 				}
 			} catch (XMPException e) {
 				log.error("Cannot parse Metadata. " + e.getLocalizedMessage());
@@ -99,31 +105,31 @@ public class PDFMetadataExtracter {
 		// xmp:CreateDate, xmp:CreatorTool, xmp:ModifyDate, xmp:metadataDate
 		// Source:
 		// https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart1.pdf
-		log.info("XMP metadata: ");
+		log.debug("Extracting XMP metadata.");
 		String[] cycleOptions = { "CreateDate", "CreatorTool", "Identifier", "Label", "MetadataDate", "ModifyDate",
 				"Rating" };
-		extractMetadata(xmp, XMPConst.NS_XMP, cycleOptions);
+		extractMetadata(xmp, XMPConst.NS_XMP, ACCoreProperties.XMP_PREFIX, cycleOptions);
 
 	}
 
 	private void extractPDFMetadata(XMPMeta xmp) {
 
-		log.info("PDF metadata: ");
+		log.debug("Extracting PDF metadata.");
 		String[] cycleOptions = { AdobePDFSchema.KEYWORDS, AdobePDFSchema.PDF_VERSION, AdobePDFSchema.PRODUCER };
 
-		extractMetadata(xmp, XMPConst.NS_PDF, cycleOptions);
-
+		extractMetadata(xmp, XMPConst.NS_PDF, PDF.PDF_PREFIX, cycleOptions);
 	}
 
 	private void extractDublinCore(XMPMeta xmp) {
-		log.info("Dublin Core Metadata: ");
+		log.debug("Extracting Dublin Core Metadata.");
 		String[] cycleOptions = { DublinCoreSchema.CONTRIBUTOR, DublinCoreSchema.COVERAGE, DublinCoreSchema.CREATOR,
 				DublinCoreSchema.DATE, DublinCoreSchema.DESCRIPTION, DublinCoreSchema.FORMAT,
 				DublinCoreSchema.IDENTIFIER, DublinCoreSchema.LANGUAGE, DublinCoreSchema.PUBLISHER,
 				DublinCoreSchema.RELATION, DublinCoreSchema.RIGHTS, DublinCoreSchema.SOURCE, DublinCoreSchema.SUBJECT,
 				DublinCoreSchema.TITLE, DublinCoreSchema.TYPE };
 
-		extractMetadata(xmp, XMPConst.NS_DC, cycleOptions);
+		extractMetadata(xmp, XMPConst.NS_DC, DublinCore.PREFIX_DC, cycleOptions);
 
 	}
+	
 }

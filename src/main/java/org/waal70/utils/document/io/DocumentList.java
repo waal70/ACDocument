@@ -49,13 +49,13 @@ public class DocumentList extends DocumentQueue {
 	private DocumentList() {
 		super();
 		populateList();
-		log.info("DocumentList constructed.");
+		log.debug("DocumentList constructed.");
 	}
 	
 	private void populateList() {
 		
 		//the main directory should be a path
-		log.info("Going to construct a DocumentList...");
+		log.debug("Going to construct a DocumentList...");
 		List<Path> pathList = DirectoryFileLister.listFiles();
 		//pathList now contains a list of filtered pdf files
 		if (Helper.splash != null)
@@ -63,7 +63,7 @@ public class DocumentList extends DocumentQueue {
 		
 		pathList.forEach(path -> {
 			try {
-				log.info("Now populating Document instance for: " + path);
+				log.info("Creating ACDocument-instance for: " + path);
 				this.add(ACDocumentFactory.getACDocument(path));
 				if (Helper.splash != null)
 				{
@@ -74,13 +74,13 @@ public class DocumentList extends DocumentQueue {
 				log.error("Unable to populate queue: " + e.getLocalizedMessage());
 			}
 		});
-		log.info("End of populateList. Number of docs queued: " + this.size());
+		log.info("Number of ACDocuments queued: " + this.size());
 		
 	}
 	
 	public ACDocument get() {
 		//This method returns a Document
-		log.info("ACDocument get requested.");
+		log.debug("ACDocument get requested.");
 		
 		return this.poll();
 		
