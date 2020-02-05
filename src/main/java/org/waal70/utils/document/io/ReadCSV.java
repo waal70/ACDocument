@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ApprovedCompany;
 import org.waal70.utils.document.ApprovedCompanyList;
 import org.waal70.utils.document.Company;
+import org.waal70.utils.document.convenience.MainProperties;
 
 /**
  * @author awaal
@@ -25,7 +26,7 @@ public class ReadCSV {
 	
 	public ApprovedCompanyList populateCompanyList()
 	{
-		String csvFile = "/Users/awaal/TEMP/PDF/result/ApprovedCompanies.csv";
+		String csvFile = MainProperties.getInstance().getCSVFilename() ;
         String line = "";
         String cvsSplitBy = ";";
 

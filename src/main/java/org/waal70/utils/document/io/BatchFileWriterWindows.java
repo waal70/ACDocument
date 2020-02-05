@@ -32,6 +32,10 @@ public class BatchFileWriterWindows extends BatchFileWriter {
 		}
 
 	}
+	@Override
+	protected String getLineEnd() {
+		return "\r\n";
+	}
 
 	public BatchFileWriterWindows() {
 		super();

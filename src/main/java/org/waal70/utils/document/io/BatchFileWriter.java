@@ -69,12 +69,18 @@ public abstract class BatchFileWriter {
 		
 	
 	}
+	
+	protected String getLineEnd() {
+		return "\n";
+		
+	}
+	
 
 	protected void addToFile(String text) {
 		if (fw != null && myFile != null) {
 			try {
 				fw.append(text);
-				fw.append("\n");
+				fw.append(this.getLineEnd());
 			} catch (IOException e) {
 				log.error("Cannot write to file ");
 			}

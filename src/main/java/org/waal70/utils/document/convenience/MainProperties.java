@@ -3,6 +3,7 @@
  */
 package org.waal70.utils.document.convenience;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -34,20 +35,59 @@ public class MainProperties {
     
     public String getSourcePath() {
     	log.debug("SourcePath: " + prop.get("SourcePath"));
-		String dirname = "/Users/awaal/TEMP/PDF/";
-		if (System.getProperty("os.name").startsWith("Windows"))
-			dirname = "C:\\pdf\\";
-		return dirname;
+		String dirname = (String) prop.get("SourcePath");
+		File sourceDir = new File(dirname);
+		if (sourceDir.exists())
+			return dirname;
+		else {
+			if (System.getProperty("os.name").startsWith("Windows"))
+				dirname = "C:\\pdf\\";
+			else
+				dirname = "/Users/awaal/TEMP/PDF/";
+			return dirname;
+		}
     }
     
     public String getTargetBase() {
     	
-    	//Primarily, get the config'd property:
-    	log.debug("TargetBase: " + prop.get("TargetBase"));
-		String dirname = "/Users/awaal/TEMP/PDF/";
+    	//Target base gets less rigorous checks, because
+    	// the path that is lacking will be created anyway
+    	log.info("TargetBase: " + prop.get("TargetBase"));
+		String dirname = (String) prop.get("TargetBase");
+		//Do some minimum checking, there should be at least one
+		// separator char in there:
+		if (dirname.contains(File.separator))
+			return dirname;
 		if (System.getProperty("os.name").startsWith("Windows"))
 			dirname = "C:\\pdf\\";
+		else
+			dirname = "/Users/awaal/TEMP/PDF/";
 		return dirname;
+		
+    }
+    
+    public String getCSVFilename() {
+    	log.info("CSV: " + prop.get("ApprovedCompaniesCSV"));
+    	//String csvName = "/Users/awaal/TEMP/PDF/result/ApprovedCompanies.csv";
+		String csvName = (String) prop.get("ApprovedCompaniesCSV");
+		File targetFile = null;
+		try {
+			targetFile = new File(csvName);
+		}
+		catch (NullPointerException e) {
+			log.error("Supplied CSV does not exist.");
+			return "ThisIsNotAFile";
+		}
+		if (targetFile.exists())
+			return csvName;
+		else {
+			if (System.getProperty("os.name").startsWith("Windows"))
+				csvName = "C:\\pdf\\ApprovedCompanies.csv";
+			else
+				csvName = "/Users/awaal/TEMP/PDF/result/ApprovedCompanies.csv";
+			return csvName;
+		}
+    	
     }
     
     public String getFilename() {
