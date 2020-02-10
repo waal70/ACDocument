@@ -23,7 +23,6 @@ import javax.swing.event.ChangeListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
-import org.waal70.utils.document.Archive.Recipient;
 import org.waal70.utils.document.convenience.Helper;
 import org.waal70.utils.document.convenience.Messages;
 
@@ -76,7 +75,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         lblSubject = new javax.swing.JLabel();
         txtSubject = new javax.swing.JTextField();
         lblRecipient = new javax.swing.JLabel();
-        cmbRecipient = new javax.swing.JComboBox<Recipient>();
+        cmbRecipient = new javax.swing.JComboBox<String>();
         cmbSenderCompany = new javax.swing.JComboBox<String>();
         lblMainCategory = new javax.swing.JLabel();
         cmbCategory = new javax.swing.JComboBox<DocumentType>();
@@ -398,7 +397,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnPrevious;
     private JComboBox<DocumentType> cmbCategory;
-    private javax.swing.JComboBox<Recipient> cmbRecipient;
+    private javax.swing.JComboBox<String> cmbRecipient;
     private JComboBox<DocumentType> cmbType;
     private javax.swing.JLabel lblFileSize;
     private javax.swing.JLabel lblMainCategory;
@@ -495,7 +494,10 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 
 	@Override
 	public void setTargetDated(Date date) {
-		// TODO Auto-generated method stub
+		txtTargetDated.setModel(new SpinnerDateModel());
+		txtTargetDated.updateUI();
+		//txtTargetDated.getModel().setValue(value);
+		//txtTargetDated.setValue(date);
 		
 	}
 
@@ -553,8 +555,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 	}
 	
 	@Override
-	public void setRecipientCombo(Recipient[] text) {
-		DefaultComboBoxModel<Recipient> model = new DefaultComboBoxModel<Recipient>(text);
+	public void setRecipientCombo(String[] text) {
+		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(text);
 		cmbRecipient.setModel(model);
 		
 	}
@@ -595,6 +597,12 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 		
 		btnNext.setEnabled(false);
 		btnPrevious.setEnabled(false);
+		
+	}
+
+	@Override
+	public void setSubject(String text) {
+		txtSubject.setText(text);
 		
 	}
 

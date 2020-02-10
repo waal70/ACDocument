@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.util.Date;
 
 import org.waal70.utils.document.Archive.DocumentType;
-import org.waal70.utils.document.Archive.Recipient;
 
 /**
  * @author awaal
@@ -46,7 +45,8 @@ public interface ACDocumentView {
     
     public void setCategoryCombo(DocumentType[] text);
     public void setTypeCombo(DocumentType[] text);
-    public void setRecipientCombo(Recipient[] text);
+    
+    public void setRecipientCombo(String[] text);
     
     public void disableTypeCombo();
 	public void enableTypeCombo();
@@ -56,6 +56,7 @@ public interface ACDocumentView {
        
     public void disableButtons();
     
+    public void setSubject(String text);
     public String getSubject();
     
     public Frame getFrame();

@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.Archive.DocumentType;
-import org.waal70.utils.document.Archive.Recipient;
 import org.waal70.utils.document.convenience.DateUtils;
 import org.waal70.utils.document.convenience.Helper;
 import org.waal70.utils.document.metadata.Metadata;
@@ -96,7 +95,7 @@ public class ACDocument extends Document {
 	        log.debug("Subject: " + fnSubject);
 	        
 	        fnTarget = this.getMetadata().get(Metadata.RECIPIENT) != null ? SEPARATOR + this.getMetadata().get(Metadata.RECIPIENT) : EMPTY;
-	        if (fnTarget.equals(SEPARATOR + Recipient.NOBODY.getDisplayAs()) || fnTarget.contentEquals(SEPARATOR + Recipient.ALL.getDisplayAs()))
+	        if (fnTarget.equals(SEPARATOR + Helper.NOBODY.getDisplayName()) || fnTarget.contentEquals(SEPARATOR + Helper.ALL.getDisplayName()))
 	        	fnTarget = EMPTY;
 	        fnTarget = Helper.toValidString(fnTarget);
 	        log.debug("Target: " + fnTarget);

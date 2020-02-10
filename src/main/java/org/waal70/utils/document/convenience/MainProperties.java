@@ -66,7 +66,31 @@ public class MainProperties {
 		
     }
     
-    public String getCSVFilename() {
+    public String getRecipientFilename() {
+       	log.info("CSV: " + prop.get("TargetUsersCSV"));
+    	//String csvName = "/Users/awaal/TEMP/PDF/result/ApprovedCompanies.csv";
+		String csvName = (String) prop.get("TargetUsersCSV");
+		File targetFile = null;
+		try {
+			targetFile = new File(csvName);
+		}
+		catch (NullPointerException e) {
+			log.error("Supplied CSV does not exist.");
+			return "ThisIsNotAFile";
+		}
+		if (targetFile.exists())
+			return csvName;
+		else {
+			if (System.getProperty("os.name").startsWith("Windows"))
+				csvName = "C:\\pdf\\TargetUsers.csv";
+			else
+				csvName = "/Users/awaal/TEMP/PDF/result/TargetUsers.csv";
+			return csvName;
+		}
+    	
+    }
+    
+    public String getCompanyFilename() {
     	log.info("CSV: " + prop.get("ApprovedCompaniesCSV"));
     	//String csvName = "/Users/awaal/TEMP/PDF/result/ApprovedCompanies.csv";
 		String csvName = (String) prop.get("ApprovedCompaniesCSV");

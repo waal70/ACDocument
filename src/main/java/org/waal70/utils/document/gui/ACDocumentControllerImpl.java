@@ -15,8 +15,9 @@ import javax.swing.JOptionPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.waal70.utils.document.ACDocument;
+import org.waal70.utils.document.ApprovedCompanyList;
 import org.waal70.utils.document.Archive.DocumentType;
-import org.waal70.utils.document.Archive.Recipient;
+import org.waal70.utils.document.TargetUserList;
 import org.waal70.utils.document.convenience.DateUtils;
 import org.waal70.utils.document.convenience.Messages;
 import org.waal70.utils.document.io.BatchFileWriter;
@@ -57,7 +58,8 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 
 		//First, get the first document from the queue:
 		log.info("Total number of documents waiting to be processed: " + docQueue.size()); //$NON-NLS-1$
-		
+		if (docQueue.size() == 0)
+			System.exit(0);
 		//retrieve the last item off the queue:
 		currentDocument = docQueue.get();
 		//Andre new since the introduction of metadata:
@@ -99,6 +101,10 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		view.setNumPages(md.get(Metadata.DOC_INFO_PAGES));
 		
 		view.setFileSize(md.get(Metadata.DOC_INFO_SIZE));
+		
+		view.setSubject("");
+		
+		//view.setTargetDated(new Date());
 		
 		//IMPORTANT: populate the combo's before setting the
 		// calculated fields, as they depend on the combo's
@@ -148,10 +154,12 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 		//CompanyList:
 		ReadCSV csv = new ReadCSV();
-		view.setCompanyCombo(csv.populateCompanyList().getListforCombo());
+		ApprovedCompanyList acl = csv.populateCompanyList();
+		view.setCompanyCombo(acl.getListforCombo());
 		
 		//Recipients:
-		view.setRecipientCombo(Recipient.getRecipientCombo());
+		TargetUserList tul = csv.populateRecipientList();
+		view.setRecipientCombo(tul.getListforCombo());
 		
 		//Category & Type:
 		view.setCategoryCombo(DocumentType.getCategoryCombo());
@@ -279,7 +287,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 	@Override
 	public void focusLost(FocusEvent e) {
 		//courtesy method to reflect the change
-		this.actionPerformed(new ActionEvent(this, 0,null));
+		this.actionPerformed(new ActionEvent(this, 0, "lostFocus"));
 		
 	}
 	

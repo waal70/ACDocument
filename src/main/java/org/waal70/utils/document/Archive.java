@@ -27,50 +27,6 @@ public class Archive {
 		String getPath();
 	}
 	
-	public enum Recipient {
-		NAME1("Naám", "Naam"),
-		NAME2("Name2"),
-		NAME3("Name3"),
-		NAME4("Name4"),
-		IRIDEOS("Irideos"),
-		KATEWAY("Kateway"),
-		ALL("Allemaal", ""),
-		NOBODY("Niemand", "");
-
-		
-		private String fileAs;
-		private String displayAs;
-		
-		@Override
-		public String toString() {
-			return getDisplayAs();
-		}
-		
-		public String getDisplayAs() {
-			return this.displayAs;
-		}
-		
-		public String getFileAs() {
-			return this.fileAs;
-		}
-		
-		public static Recipient[] getRecipientCombo() {
-			
-			return values();
-		}
-		
-		//Overloaded in case both are the same
-		private Recipient(String displayAs) {
-			this(displayAs, displayAs);
-		}
-		
-		private Recipient(String displayAs, String fileAs)
-		{
-			this.displayAs = displayAs;
-			this.fileAs = fileAs;
-		}
-	}
-
 	/**
 	 * @author awaal
 	 * Should be as follows:

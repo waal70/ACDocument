@@ -8,6 +8,7 @@ import java.text.Normalizer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.waal70.utils.document.TargetUser;
 import org.waal70.utils.document.gui.SplashScreen;
 
 /**
@@ -20,6 +21,9 @@ public class Helper {
 	
 	public static SplashScreen splash;
 	
+	public static TargetUser NOBODY = new TargetUser("Niemand", "Niemand");
+	public static TargetUser ALL = new TargetUser("Allemaal", "Allemaal");
+	
 	public static void setSplash(SplashScreen splash) {
 		Helper.splash = splash;
 	}
@@ -28,6 +32,10 @@ public class Helper {
 		String int_result;
 		
 		int_result = input.replaceAll("[\\\\/:\"*?<>|]+", "");
+		
+		//Also transform spaces into underscores:
+		
+		int_result = int_result.replaceAll("\\s+", "_");
 		
 		int_result = Normalizer.normalize(int_result, Normalizer.Form.NFD);
 	
