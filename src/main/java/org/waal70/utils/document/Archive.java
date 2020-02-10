@@ -75,7 +75,7 @@ public class Archive {
          	Ziektekosten(VERZEKERINGEN,1,"Ziektekosten"),
          	Overig(VERZEKERINGEN,2,"Overig"),
          	
-         OFFICIELE(ROOT,8,"Officiële documenten"),
+         OFFICIELE(ROOT,8,"Officiële documenten", "Officiele_documenten"),
          	Persoonlijk(OFFICIELE,1,"Persoonlijk"),
          	Akte(OFFICIELE,2,"Akten, Uittreksels", "Akten_Uittreksels"),
          	Zakelijk(OFFICIELE,3,"Zakelijk"),
