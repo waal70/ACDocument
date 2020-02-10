@@ -14,6 +14,7 @@ import org.waal70.utils.document.ApprovedCompanyList;
 import org.waal70.utils.document.Entity;
 import org.waal70.utils.document.TargetUser;
 import org.waal70.utils.document.TargetUserList;
+import org.waal70.utils.document.convenience.Helper;
 import org.waal70.utils.document.convenience.MainProperties;
 
 
@@ -43,19 +44,20 @@ public class ReadCSV {
                 targetUser.setDisplayName(country[1]);
                 targetUser.setArchiveCode(country[2]);
                 tul.addTargetUser((TargetUser) targetUser);
-
                 log.info("Recipient [code= " + country[1] + " , name=" + country[2] + "]");
 
             }
 
         } catch (IOException e) {
-        	//There is no CSV file found, so just populate with a default company:
+        	//There is no CSV file found, so just populate with a default user:
         	Entity newUser = new TargetUser();
-        	newUser.setDisplayName("Standaard");
-        	newUser.setArchiveCode("Standaard");
+        	newUser.setDisplayName("Onbekend");
+        	newUser.setArchiveCode("Onbekend");
         	tul.addTargetUser((TargetUser) newUser);
-            return tul;
         }
+        //Add the default users NOBODY and ALL
+        tul.addTargetUser(Helper.USER_ALL);
+        tul.addTargetUser(Helper.USER_NOBODY);
         return tul;
 	}
 	

@@ -192,7 +192,11 @@ public class Archive {
 				return parent.getArchivecode() + Integer.toString(archivecode) + SEPARATOR;
 
 		}
-		
+		/**
+		 * The path consists of a fully qualified directory pointer
+		 * 
+		 * @return Returns the document-type specific suffix, NOT including parents'
+		 */
 		public String getOnlyPath() {
 			return path;
 		}

@@ -21,8 +21,8 @@ public class Helper {
 	
 	public static SplashScreen splash;
 	
-	public static TargetUser NOBODY = new TargetUser("Niemand", "Niemand");
-	public static TargetUser ALL = new TargetUser("Allemaal", "Allemaal");
+	public static TargetUser USER_NOBODY = new TargetUser("Niemand", "Niemand");
+	public static TargetUser USER_ALL = new TargetUser("Allemaal", "Allemaal");
 	
 	public static void setSplash(SplashScreen splash) {
 		Helper.splash = splash;

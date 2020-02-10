@@ -164,7 +164,7 @@ import org.apache.logging.log4j.Logger;
 	    	SimpleDateFormat datePattern = new SimpleDateFormat("yyyyMMdd");
 	    	DateUtils du = new DateUtils();
 	    	Date temp = du.tryToParse(date);
-	    	log.info("formatDateToFilename " + datePattern.format(temp));
+	    	log.debug("formatDateToFilename " + datePattern.format(temp));
 	    	return datePattern.format(temp);
 	    }
 	    

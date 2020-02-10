@@ -5,7 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +24,8 @@ public abstract class BatchFileWriter {
 	protected String tmpFolder = System.getProperty("java.io.tmpdir");
 	
 	protected String moveCommand = "should have been re-defined";
+	
+	protected Map <String, String> targetFolders = new HashMap<String, String>();
 
 	public BatchFileWriter() {
 		super();
@@ -86,16 +90,38 @@ public abstract class BatchFileWriter {
 			}
 		}
 	}
+	
+	protected void createTargetFolder(String folder) {
+		log.error("This should have been overridden");
+	}
+	
+	protected void createTargetDirs() {
+		//loops through targetFolders
+		for (String value : targetFolders.values()) {
+			createTargetFolder(value);
+		}
+		
+	}
 
 	public void processQueue(DocumentReadyList docQueue) {
 		// process the queue
 		log.info("Going to process " + docQueue.size() + " document(s).");
+		
 		writeHeader();
 		Iterator<ACDocument> dqi = docQueue.iterator();
 		dqi.forEachRemaining(document -> {
+			targetFolders.put(document.getDoctype().toString(), document.getDoctype().getPath());
+			//addEntry(document);
+		});
+		createTargetDirs();
+		//reset the iterator:
+		dqi = docQueue.iterator();
+		dqi.forEachRemaining(document -> {
+			//targetFolders.put(document.getDoctype().toString(), document.getDoctype().getPath());
 			addEntry(document);
 		});
 		writeFooter();
+		log.info("Have processed queue: this many in queue: " + docQueue.size());
 		closeAll();
 	}
 

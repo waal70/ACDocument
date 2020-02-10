@@ -4,6 +4,8 @@
 package org.waal70.utils.document.convenience;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -52,7 +54,7 @@ public class MainProperties {
     	
     	//Target base gets less rigorous checks, because
     	// the path that is lacking will be created anyway
-    	log.info("TargetBase: " + prop.get("TargetBase"));
+    	log.debug("TargetBase: " + prop.get("TargetBase"));
 		String dirname = (String) prop.get("TargetBase");
 		//Do some minimum checking, there should be at least one
 		// separator char in there:
@@ -127,7 +129,20 @@ public class MainProperties {
 	
 	String propFileName = "acdocument.properties";
 
-	inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
+	//let's see if the user has put the property file with the .JAR file:
+	File jarPath=new File(MainProperties.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+    String propertiesPath=jarPath.getParentFile().getAbsolutePath();
+    
+    log.debug("propertiesPath: " + propertiesPath);
+	
+    try {
+		inputStream = new FileInputStream(propertiesPath+File.separator+propFileName);
+	} catch (FileNotFoundException e1) {
+		//Apparently, there is no user-specified properties file, revert to the one in the jar
+		log.error("You did not specify your own properties. I will use mine.");
+	}
+	if (inputStream == null)
+		inputStream = getClass().getClassLoader().getResourceAsStream(propFileName);
 
 	if (inputStream != null) {
 		try {

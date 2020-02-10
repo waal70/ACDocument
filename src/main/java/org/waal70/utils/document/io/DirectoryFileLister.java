@@ -31,7 +31,7 @@ public class DirectoryFileLister {
 		List<Path> result = new ArrayList<Path>();
 		Stream<Path> str;
 		try {
-			str = Files.list(new File(dirname).toPath()).filter(s -> s.toString().endsWith(".pdf")).limit(10);
+			str = Files.list(new File(dirname).toPath()).filter(s -> s.toString().endsWith(".pdf")).limit(20);
 			result = str.collect(Collectors.toList());
 			str.close();
 		} catch (IOException e) {

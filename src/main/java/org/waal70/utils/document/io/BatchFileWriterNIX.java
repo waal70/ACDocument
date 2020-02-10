@@ -30,6 +30,10 @@ public class BatchFileWriterNIX extends BatchFileWriter {
 			log.error("Cannot create temp file " + e.getLocalizedMessage());
 		}
 	}
+	@Override
+	protected void createTargetFolder(String folder) {
+		//no operation here...
+	}
 
 	public BatchFileWriterNIX() {
 		super();

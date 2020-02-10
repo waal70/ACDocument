@@ -95,13 +95,13 @@ public class ACDocument extends Document {
 	        log.debug("Subject: " + fnSubject);
 	        
 	        fnTarget = this.getMetadata().get(Metadata.RECIPIENT) != null ? SEPARATOR + this.getMetadata().get(Metadata.RECIPIENT) : EMPTY;
-	        if (fnTarget.equals(SEPARATOR + Helper.NOBODY.getDisplayName()) || fnTarget.contentEquals(SEPARATOR + Helper.ALL.getDisplayName()))
+	        if (fnTarget.equals(SEPARATOR + Helper.USER_NOBODY.getDisplayName()) || fnTarget.contentEquals(SEPARATOR + Helper.USER_ALL.getDisplayName()))
 	        	fnTarget = EMPTY;
 	        fnTarget = Helper.toValidString(fnTarget);
 	        log.debug("Target: " + fnTarget);
 	        fnTotal = fnDate + fnSender + fnSubject + fnTarget + ".pdf";
 			log.debug("Path: " + this.getDoctype().getPath());
-			log.info(this.getMetadata().get(Metadata.TITLE) + "->" + fnTotal);
+			log.debug(this.getMetadata().get(Metadata.TITLE) + "->" + fnTotal);
 		}
 		return fnTotal;
 	}

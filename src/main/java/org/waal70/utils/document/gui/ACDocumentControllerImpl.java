@@ -19,6 +19,7 @@ import org.waal70.utils.document.ApprovedCompanyList;
 import org.waal70.utils.document.Archive.DocumentType;
 import org.waal70.utils.document.TargetUserList;
 import org.waal70.utils.document.convenience.DateUtils;
+import org.waal70.utils.document.convenience.MainProperties;
 import org.waal70.utils.document.convenience.Messages;
 import org.waal70.utils.document.io.BatchFileWriter;
 import org.waal70.utils.document.io.BatchFileWriterFactory;
@@ -59,7 +60,10 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		//First, get the first document from the queue:
 		log.info("Total number of documents waiting to be processed: " + docQueue.size()); //$NON-NLS-1$
 		if (docQueue.size() == 0)
+		{
+			log.error("No documents found. Are you sure " + MainProperties.getInstance().getSourcePath() + " is correct?");
 			System.exit(0);
+		}
 		//retrieve the last item off the queue:
 		currentDocument = docQueue.get();
 		//Andre new since the introduction of metadata:

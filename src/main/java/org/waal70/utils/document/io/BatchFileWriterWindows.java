@@ -36,10 +36,19 @@ public class BatchFileWriterWindows extends BatchFileWriter {
 	protected String getLineEnd() {
 		return "\r\n";
 	}
+	
+	@Override
+	protected void createTargetFolder(String folder) {
+		//Algorithm is: if not exist "C:\VTS\" mkdir C:\VTS
+		String fullFoldername = MainProperties.getInstance().getTargetBase() + folder;
+		String entry = "if not exist \"" + fullFoldername + "\" mkdir " + fullFoldername;
+		log.info("Entry is: " + entry);
+		addToFile(entry);
+	}
 
 	public BatchFileWriterWindows() {
 		super();
-		moveCommand = "ROBOCOPY /MOV";
+		moveCommand = "MOVE /Y";
 		clearFile();
 	}
 

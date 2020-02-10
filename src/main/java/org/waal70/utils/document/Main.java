@@ -29,14 +29,10 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 
 		// TODO: Third level on certain document types (pop-up?)
-		// TODO: Restructure packages/classes
-		// TODO: ...
+		// TODO: Handle displayname and category name for companies and users
+		// TODO: add default users (NOBODY and ALL)
 		log.debug("Started the program. Handing over to GUI: "); //$NON-NLS-1$
-		
-		//Metadata md = new Metadata();
-		//md.add(ACCoreProperties.CONTRIBUTOR, "awaal");
-		
-		
+
 		doGUI();
 	}
 
