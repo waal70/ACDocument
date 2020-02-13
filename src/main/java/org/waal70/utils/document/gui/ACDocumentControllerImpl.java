@@ -12,9 +12,11 @@ import java.io.IOException;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
+import javax.xml.transform.TransformerException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.xmpbox.type.BadFieldValueException;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.ApprovedCompanyList;
 import org.waal70.utils.document.Archive.DocumentType;
@@ -214,11 +216,11 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 			// and do one last update:
 			this.updateDocument();
 			finishedDocQueue.add(currentDocument);
-			/*
-			 * try { PDFMetaDataWriter.persistMetadata(currentDocument); } catch
-			 * (XMPException | IOException e1) { // TODO Auto-generated catch block
-			 * e1.printStackTrace(); }
-			 */
+			
+			  try { PDFMetaDataWriter.persistMetadata(currentDocument); } catch
+			  (XMPException | IOException | TransformerException | BadFieldValueException e1) { // TODO Auto-generated catch block
+			  e1.printStackTrace(); }
+			 
 			log.info("Moving to next document in queue..."); //$NON-NLS-1$
 			currentDocument = docQueue.get();
 			if (currentDocument == null)
