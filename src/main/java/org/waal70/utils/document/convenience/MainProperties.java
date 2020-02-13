@@ -126,8 +126,12 @@ public class MainProperties {
     }
     
     private void loadProperties() {
-	
-	String propFileName = "acdocument.properties";
+
+    String propFileName = "acdocument.properties";
+    if (System.getProperty("os.name").startsWith("Windows"))	
+    	propFileName = "acdocument.win.properties";
+    else
+    	propFileName = "acdocument.nix.properties";
 
 	//let's see if the user has put the property file with the .JAR file:
 	File jarPath=new File(MainProperties.class.getProtectionDomain().getCodeSource().getLocation().getPath());

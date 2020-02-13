@@ -52,6 +52,10 @@ public class PDFParser {
 		if (pdoc != null) {
 			newDoc.setPreview(createPreviewImage(pdoc, true));
 			
+			//Andre introduced for persisting metadata back to the file:
+			newDoc.setSourceFileName(path.toString());
+			//End Andre
+			
 			md.set(Metadata.EMBEDDED_RESOURCE_TYPE, EmbeddedResourceType.ATTACHMENT.toString());
 			md.set(Metadata.EMBEDDED_RESOURCE_TYPE_KEY, "preview");
 			md.setPreview(newDoc.getPreview());

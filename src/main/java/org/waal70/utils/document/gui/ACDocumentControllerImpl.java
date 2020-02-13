@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.IOException;
 import java.util.Date;
 
 import javax.swing.JOptionPane;
@@ -25,8 +26,11 @@ import org.waal70.utils.document.io.BatchFileWriter;
 import org.waal70.utils.document.io.BatchFileWriterFactory;
 import org.waal70.utils.document.io.DocumentList;
 import org.waal70.utils.document.io.DocumentReadyList;
+import org.waal70.utils.document.io.PDFMetaDataWriter;
 import org.waal70.utils.document.io.ReadCSV;
 import org.waal70.utils.document.metadata.Metadata;
+
+import com.adobe.internal.xmp.XMPException;
 
 /**
  * @author awaal
@@ -206,10 +210,15 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		if (e.getActionCommand().equals("Next")) //$NON-NLS-1$
 		{
 			//This means I am done with the current document,
-			// so enqueue it on the ready queue
-			// do one last update:
+			// so enqueue it on the ready queue, persist the metadata
+			// and do one last update:
 			this.updateDocument();
 			finishedDocQueue.add(currentDocument);
+			/*
+			 * try { PDFMetaDataWriter.persistMetadata(currentDocument); } catch
+			 * (XMPException | IOException e1) { // TODO Auto-generated catch block
+			 * e1.printStackTrace(); }
+			 */
 			log.info("Moving to next document in queue..."); //$NON-NLS-1$
 			currentDocument = docQueue.get();
 			if (currentDocument == null)

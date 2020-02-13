@@ -29,6 +29,7 @@ public class ACDocument extends Document {
 	private static final String EMPTY = "";
 	
 	private Metadata metadata;
+	private String sourceFileName;
 	
 	public void setMetadata(Metadata md) {
 		metadata = md;
@@ -64,6 +65,19 @@ public class ACDocument extends Document {
 		return DocumentType.valueOf(this.getMetadata().get(Metadata.DOC_TYPE));
 	}
 
+	public void setSourceFileName(String filename) {
+		this.sourceFileName = filename;
+		
+	}
+	
+	/**
+	 * @return the original path + filename of the source PDF
+	 */
+	public String getSourceFileName() {
+		return sourceFileName;
+		
+	}
+	
 	/**
 	 * @return the targetFileName
 	 */
