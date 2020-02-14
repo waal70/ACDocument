@@ -16,6 +16,7 @@ import javax.xml.transform.TransformerException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentCatalog;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
@@ -115,6 +116,12 @@ public class PDFMetaDataWriter {
 
 			
 			PDMetadata pd_merged = new PDMetadata(pdoc, in);
+			
+			
+			XMPMetadata x_meta = XMPMetadata.createXMPMetadata();
+			//pd_merged.importXMPMetadata(x_meta);
+			
+			
 			
 			//PDMetadata altMetadata = tryout();
 			PDDocumentCatalog pcat = pdoc.getDocumentCatalog();
