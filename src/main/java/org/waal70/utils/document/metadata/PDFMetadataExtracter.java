@@ -47,7 +47,7 @@ public class PDFMetadataExtracter {
 		PDDocumentInformation pdi = pdoc.getDocumentInformation();
 		Set<String> ss = pdi.getMetadataKeys();
 		log.info("Found this many PDI Metadata keys: " + ss.size());
-		String prefix = ACCoreProperties.PDI_PREFIX;
+		String prefix = Metadata.PDI_PREFIX;
 		Iterator<String> itr = ss.iterator();
 
 		while (itr.hasNext()) {
@@ -56,7 +56,7 @@ public class PDFMetadataExtracter {
 			// custom properties already. In order not to duplicate,
 			// only write properties if they do NOT contain the
 			// custom properties
-			if (!currentKey.contains(ACCoreProperties.AC_META_PREFIX))
+			if (!currentKey.contains(Metadata.AC_META_PREFIX))
 				md.add(prefix + currentKey, pdi.getCustomMetadataValue(currentKey));
 		}
 
@@ -129,7 +129,7 @@ public class PDFMetadataExtracter {
 		log.debug("Extracting XMP metadata.");
 		String[] cycleOptions = { "CreateDate", "CreatorTool", "Identifier", "Label", "MetadataDate", "ModifyDate",
 				"Rating" };
-		extractMetadata(xmp, XMPConst.NS_XMP, ACCoreProperties.XMP_PREFIX, cycleOptions);
+		extractMetadata(xmp, XMPConst.NS_XMP, Metadata.XMP_PREFIX, cycleOptions);
 
 	}
 
@@ -138,7 +138,7 @@ public class PDFMetadataExtracter {
 		log.debug("Extracting PDF metadata.");
 		String[] cycleOptions = { AdobePDFSchema.KEYWORDS, AdobePDFSchema.PDF_VERSION, AdobePDFSchema.PRODUCER };
 
-		extractMetadata(xmp, XMPConst.NS_PDF, PDF.PDF_PREFIX, cycleOptions);
+		extractMetadata(xmp, XMPConst.NS_PDF, Metadata.PDF_PREFIX, cycleOptions);
 	}
 
 	private void extractDublinCore(XMPMeta xmp) {
@@ -149,7 +149,7 @@ public class PDFMetadataExtracter {
 				DublinCoreSchema.RELATION, DublinCoreSchema.RIGHTS, DublinCoreSchema.SOURCE, DublinCoreSchema.SUBJECT,
 				DublinCoreSchema.TITLE, DublinCoreSchema.TYPE };
 
-		extractMetadata(xmp, XMPConst.NS_DC, DublinCore.PREFIX_DC + ACCoreProperties.NAMESPACE_PREFIX_DELIMITER, cycleOptions);
+		extractMetadata(xmp, XMPConst.NS_DC, DublinCore.PREFIX_DC + Metadata.NAMESPACE_PREFIX_DELIMITER, cycleOptions);
 
 	}
 

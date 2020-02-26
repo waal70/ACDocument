@@ -152,7 +152,20 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		md.set(Metadata.TITLE, view.getScanFileName());
 		md.set(Metadata.DOC_INFO_TITLE, view.getScanFileName());
 		//currentDocument.setTitle(view.getScanFileName());
-		
+		//ANDRE February 2020: to help with metadata scanning,
+		// let's add the keywords, and relate that to the
+		// document's properties:
+		// Let's concatenate DocType, creator and subject:
+		StringBuilder sb = new StringBuilder();
+		sb.append(md.get(Metadata.DOC_TYPE)); sb.append("; ");
+		sb.append(md.get(Metadata.CREATOR)); 
+		if (md.get(Metadata.DESCRIPTION).trim().isEmpty())
+			log.info("omitting description");
+		else
+		{
+			sb.append(";"); sb.append(md.get(Metadata.DESCRIPTION));
+		}
+		md.set(Metadata.DOC_INFO_KEY_WORDS, sb.toString());
 		view.setTargetFileName(currentDocument.getTargetFileName());
 		view.setTargetPath(currentDocument.getDoctype().getPath());
 		//log.info(this.currentDocument.toString());

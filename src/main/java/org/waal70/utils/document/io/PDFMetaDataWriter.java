@@ -25,10 +25,7 @@ import org.apache.xmpbox.type.BadFieldValueException;
 import org.apache.xmpbox.xml.XmpSerializer;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.convenience.DateUtils;
-import org.waal70.utils.document.metadata.ACCoreProperties;
-import org.waal70.utils.document.metadata.DublinCore;
 import org.waal70.utils.document.metadata.Metadata;
-import org.waal70.utils.document.metadata.PDF;
 
 import com.adobe.internal.xmp.XMPException;
 
@@ -79,7 +76,7 @@ public class PDFMetaDataWriter {
 			md = document.getMetadata();
 			File fDoc = new File(document.getSourceFileName());
 			pdoc = PDDocument.load(fDoc);
-			if (md.containsPrefix(ACCoreProperties.PDI_PREFIX)) {
+			if (md.containsPrefix(Metadata.PDI_PREFIX)) {
 				//There "was" PDI, so ensure there will be PDI again:
 				log.info("PDI markers found");
 				pdoc.setDocumentInformation(persistPDI());
@@ -125,32 +122,31 @@ public class PDFMetaDataWriter {
 		// For now, loop through everything with a PDI prefix:
 		
 		PDDocumentInformation info = new PDDocumentInformation();
-		//String[] loop = md.namesWithPrefix(ACCoreProperties.PDI_PREFIX);
 		
 		//2.0 properties:
 		
 		DateUtils du = new DateUtils();
 		Calendar c = Calendar.getInstance();
 		//CreationDate
-		c.setTime(du.tryToParse(md.get(ACCoreProperties.PDI_PREFIX+"CreationDate")));
+		c.setTime(du.tryToParse(md.get(Metadata.PDI_PREFIX+"CreationDate")));
 		info.setCreationDate(c);
 		
 		//ModDate:
-		c.setTime(du.tryToParse(md.get(ACCoreProperties.PDI_PREFIX+"ModDate")));
+		c.setTime(du.tryToParse(md.get(Metadata.PDI_PREFIX+"ModDate")));
 		info.setModificationDate(c);
 		
 		//deprecated properties:
-		info.setAuthor(md.get(ACCoreProperties.PDI_PREFIX+"Author"));
-		info.setCreator(md.get(ACCoreProperties.PDI_PREFIX+"Creator"));
-		info.setKeywords(md.get(ACCoreProperties.PDI_PREFIX+"Keywords"));
-		info.setProducer(md.get(ACCoreProperties.PDI_PREFIX+"Producer"));
-		info.setSubject(md.get(ACCoreProperties.PDI_PREFIX+"Subject"));
-		info.setTitle(md.get(ACCoreProperties.PDI_PREFIX+"Title"));
+		info.setAuthor(md.get(Metadata.PDI_PREFIX+"Author"));
+		info.setCreator(md.get(Metadata.PDI_PREFIX+"Creator"));
+		info.setKeywords(md.get(Metadata.PDI_PREFIX+"Keywords"));
+		info.setProducer(md.get(Metadata.PDI_PREFIX+"Producer"));
+		info.setSubject(md.get(Metadata.PDI_PREFIX+"Subject"));
+		info.setTitle(md.get(Metadata.PDI_PREFIX+"Title"));
 		
 		
 		//custom properties:
-		String[] customMD = new String[md.namesWithPrefix(ACCoreProperties.AC_META_PREFIX).length];
-		customMD = md.namesWithPrefix(ACCoreProperties.AC_META_PREFIX);
+		String[] customMD = new String[md.namesWithPrefix(Metadata.AC_META_PREFIX).length];
+		customMD = md.namesWithPrefix(Metadata.AC_META_PREFIX);
 		for (int i=0; i<customMD.length;i++)
 		{
 			info.setCustomMetadataValue(customMD[i], md.get(customMD[i]));
@@ -172,7 +168,7 @@ public class PDFMetaDataWriter {
 		pdfaSchema.setConformance("B");
 
 		// Dublin Core properties
-		String localPrefix = DublinCore.PREFIX_DC + ACCoreProperties.NAMESPACE_PREFIX_DELIMITER;
+		String localPrefix = Metadata.PREFIX_DC + Metadata.NAMESPACE_PREFIX_DELIMITER;
 		DublinCoreSchema dublinCoreSchema = xmpMetadata.createAndAddDublinCoreSchema();
 		//Guaranteed values:
 		dublinCoreSchema.setTitle(md.get(localPrefix + DublinCoreSchema.TITLE));
@@ -214,9 +210,9 @@ public class PDFMetaDataWriter {
 		
 		AdobePDFSchema aps = xmpMetadata.createAndAddAdobePDFSchema();
 		
-		aps.setKeywords(md.get(PDF.DOC_INFO_KEY_WORDS) != null ? md.get(PDF.DOC_INFO_KEY_WORDS): dublinCoreSchema.getSubjects().get(0));
-		aps.setPDFVersion(md.get(PDF.PDF_VERSION));
-		aps.setProducer(md.get(PDF.DOC_INFO_CREATOR)!= null ? md.get(PDF.DOC_INFO_CREATOR): md.get(localPrefix + DublinCoreSchema.CREATOR));
+		aps.setKeywords(md.get(Metadata.DOC_INFO_KEY_WORDS) != null ? md.get(Metadata.DOC_INFO_KEY_WORDS): dublinCoreSchema.getSubjects().get(0));
+		aps.setPDFVersion(md.get(Metadata.PDF_VERSION));
+		aps.setProducer(md.get(Metadata.DOC_INFO_CREATOR)!= null ? md.get(Metadata.DOC_INFO_CREATOR): md.get(localPrefix + DublinCoreSchema.CREATOR));
 
 		// Let us save the new document somewhere...
 

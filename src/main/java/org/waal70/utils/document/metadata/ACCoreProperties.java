@@ -130,99 +130,16 @@ public interface ACCoreProperties {
      * may be faulty and should be treated only as a hint.
      */
 
-    /**
-     * @see DublinCore#FORMAT
-     */
-    Property FORMAT = DublinCore.FORMAT;
-    
-    /**
-    * @see DublinCore#IDENTIFIER
-    */
-    Property IDENTIFIER = DublinCore.IDENTIFIER;
-    
-    /**
-    * @see DublinCore#CONTRIBUTOR
-    */
-    Property CONTRIBUTOR = DublinCore.CONTRIBUTOR;
-    
-   /**
-    * @see DublinCore#COVERAGE
-    */
-     Property COVERAGE = DublinCore.COVERAGE;
-    
-   /**
-    * @see DublinCore#CREATOR
-    */
-     Property CREATOR = DublinCore.CREATOR;
-    
-    /**
-    * @see DublinCore#LANGUAGE
-    */
-     Property LANGUAGE = DublinCore.LANGUAGE;
-    
-   /**
-    * @see DublinCore#PUBLISHER
-    */
-     Property PUBLISHER = DublinCore.PUBLISHER;
-    
-   /**
-    * @see DublinCore#RELATION
-    */
-     Property RELATION = DublinCore.RELATION;
-
-   /**
-    * @see DublinCore#RIGHTS
-    */
-     Property RIGHTS = DublinCore.RIGHTS;
-    
-   /**
-    * @see DublinCore#SOURCE
-    */
-     Property SOURCE = DublinCore.SOURCE;
-    
-   /**
-    * @see DublinCore#TYPE
-    */
-     Property TYPE = DublinCore.TYPE;
-    
-    // Descriptive properties
-    
-    /**
-     * @see DublinCore#TITLE
-     */
-     Property TITLE = DublinCore.TITLE;
-     
-    /**
-     * @see DublinCore#DESCRIPTION
-     */
-     Property DESCRIPTION = DublinCore.DESCRIPTION;
-     
-    /**
-     * {@link DublinCore#SUBJECT}; should include both subject and keywords
-     *  if a document format has both.  See also {@link Office#KEYWORDS}
-     *  and {@link OfficeOpenXMLCore#SUBJECT}.
-     */
-     Property SUBJECT = DublinCore.SUBJECT;
 
     // Date related properties
-    
-     /** 
-      * @see DublinCore#DATE 
-      */
-      Property CREATED = DublinCore.CREATED;
-      
+
       Property DATED = DublinCore.DATE;
       
       //Properties for the AC Archive
        Property DOC_TYPE = Property.externalClosedChoice(AC_META_PREFIX +"doctype", Archive.DocumentType.getAllTypes());
        Property RECIPIENT = Property.externalText(AC_META_PREFIX+"recipient");
       
-     /** 
-      * @see DublinCore#MODIFIED
-      */
-      Property MODIFIED = DublinCore.MODIFIED;
 
- 
  
     /**
      * Embedded resource type property
@@ -230,7 +147,7 @@ public interface ACCoreProperties {
      Property EMBEDDED_RESOURCE_TYPE = Property.internalClosedChoice(EMBEDDED_RESOURCE_TYPE_KEY,
                                                                      EmbeddedResourceType.ATTACHMENT.toString(),
                                                                      EmbeddedResourceType.INLINE.toString());
-
+    
 
 
     Property HAS_SIGNATURE = Property.internalBoolean("hasSignature");
