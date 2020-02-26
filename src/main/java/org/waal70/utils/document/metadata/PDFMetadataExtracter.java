@@ -30,42 +30,51 @@ import com.adobe.internal.xmp.properties.XMPProperty;
 public class PDFMetadataExtracter {
 	private static Logger log = LogManager.getLogger(PDFMetadataExtracter.class);
 	private Metadata md = null;
-	
-	
-	public PDFMetadataExtracter (Metadata metadata) {
+
+	public PDFMetadataExtracter(Metadata metadata) {
 		this.md = metadata;
 	}
-	
-  	
+
 	public Metadata extractFromDocument(PDDocument pdoc) {
-		
-		log.info("Now processing metadata...");
 
-		if (pdoc.getVersion() < 2f) {
-			// get information via
-			PDDocumentInformation pdi = pdoc.getDocumentInformation();
-			Set<String> ss = pdi.getMetadataKeys();
-			log.debug("Metadata keys: " + ss.size());
-			String prefix = ACCoreProperties.PDI_PREFIX;
-			Iterator<String> itr = ss.iterator();
+		log.debug("Now processing metadata...");
 
-			while(itr.hasNext()){
-				String currentKey = itr.next();
-				md.add(prefix+currentKey, pdi.getCustomMetadataValue(currentKey));
-			}
+		// Andre: see if the version check makes sense.
+		// For now, try to process both the PDI as well as the
+		// XMP metadata...
+		// if (pdoc.getVersion() < 2f) {
+		// get information via
+		PDDocumentInformation pdi = pdoc.getDocumentInformation();
+		Set<String> ss = pdi.getMetadataKeys();
+		log.info("Found this many PDI Metadata keys: " + ss.size());
+		String prefix = ACCoreProperties.PDI_PREFIX;
+		Iterator<String> itr = ss.iterator();
 
-		} else {
-			// get information via metadata-stream
-			PDDocumentCatalog pcat = pdoc.getDocumentCatalog();
-			PDMetadata pmeta = pcat.getMetadata();
+		while (itr.hasNext()) {
+			String currentKey = itr.next();
+			//If the PDF was processed before, the PDI may contain
+			// custom properties already. In order not to duplicate,
+			// only write properties if they do NOT contain the
+			// custom properties
+			if (!currentKey.contains(ACCoreProperties.AC_META_PREFIX))
+				md.add(prefix + currentKey, pdi.getCustomMetadataValue(currentKey));
+		}
 
+		// } else {
+		// get information via metadata-stream
+		PDDocumentCatalog pcat = pdoc.getDocumentCatalog();
+		PDMetadata pmeta = pcat.getMetadata();
+		if (pmeta != null) {
 			// Try with Adobe library:
 			XMPMeta xmp = null;
 			try {
 				xmp = XMPMetaFactory.parse(pmeta.createInputStream());
+				log.info("Found XMP entries.");
+				log.debug("DUMP OF XMP INFO:");
+				log.debug(xmp.dumpObject());
 			} catch (XMPException e) {
 				log.error("Invalid XMP XML, " + e.getLocalizedMessage());
-			} catch (IOException e) { 
+			} catch (IOException e) {
 				log.error("Cannot read stream " + e.getLocalizedMessage());
 			}
 			if (xmp != null) {
@@ -78,7 +87,10 @@ public class PDFMetadataExtracter {
 				// Try and get the XMP basic metadata:
 				extractXMPMetadata(xmp);
 			}
-		}
+		} else
+			log.info("Found this many XMP entries: 0");
+
+		// }
 		return md;
 	}
 
@@ -93,8 +105,9 @@ public class PDFMetadataExtracter {
 				if (xmpp != null) {
 					PropertyOptions propOptions = xmpp.getOptions();
 					if (propOptions.isArray())
-						md.add(prefix + optionName, xmp.getArrayItem(namespace, optionName, XMPConst.ARRAY_LAST_ITEM).getValue());
-					else 
+						md.add(prefix + optionName,
+								xmp.getArrayItem(namespace, optionName, XMPConst.ARRAY_LAST_ITEM).getValue());
+					else
 						md.add(prefix + optionName, xmp.getPropertyString(namespace, optionName));
 				}
 			} catch (XMPException e) {
@@ -136,8 +149,8 @@ public class PDFMetadataExtracter {
 				DublinCoreSchema.RELATION, DublinCoreSchema.RIGHTS, DublinCoreSchema.SOURCE, DublinCoreSchema.SUBJECT,
 				DublinCoreSchema.TITLE, DublinCoreSchema.TYPE };
 
-		extractMetadata(xmp, XMPConst.NS_DC, DublinCore.PREFIX_DC, cycleOptions);
+		extractMetadata(xmp, XMPConst.NS_DC, DublinCore.PREFIX_DC + ACCoreProperties.NAMESPACE_PREFIX_DELIMITER, cycleOptions);
 
 	}
-	
+
 }

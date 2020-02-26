@@ -121,6 +121,60 @@ public class Metadata implements PDF, ACCoreProperties, Serializable {
     public boolean isMultiValued(final String name) {
         return metadata.get(name) != null && metadata.get(name).length > 1;
     }
+    /**
+     * Returns true if prefix is found among the key names.
+     * 
+     * @param prefix
+     *          the string to look for
+     * @return true if prefix is found
+     */
+    public boolean containsPrefix(final String prefix) {
+    	String[] names = names();
+    	boolean result = false;
+    	for (int i=0; i < names.length; i++) {
+    		if (names[i].contains(prefix))
+    			result = true;
+    	}
+		return result;
+    	
+    }
+    /**
+     * Returns the number of keys having a certain prefix
+     * 
+     * @param prefix
+     *          the string to look for
+     * @return an int with the number of keys
+     */
+    public int countPrefix(final String prefix) {
+    	int result = 0;
+    	String[] names = names();
+    	for (int i=0; i < names.length; i++) {
+    		if (names[i].contains(prefix))
+    			result++;
+    	}
+    	return result;
+    }
+    /**
+     * Returns an array of metadata keys having a certain prefix.
+     * 
+     * @param prefix
+     *          the string to look for
+     * @return an array of full key names containing the prefix
+     */
+    public String[] namesWithPrefix(final String prefix) {
+    	String[] result = new String[countPrefix(prefix)];
+    	String[] names = names();
+    	int resultCounter = 0;
+    	for (int i=0; i < names.length; i++) {
+    		if (names[i].contains(prefix))
+    		{
+    			result[resultCounter] = names[i];
+    			resultCounter++;
+    		}
+    	}
+ 	
+    	return result;
+    }
 
     /**
      * Returns an array of the names contained in the metadata.

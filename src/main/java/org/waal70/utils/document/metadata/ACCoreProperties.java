@@ -80,7 +80,7 @@ public interface ACCoreProperties {
     
     public static String XMP_PREFIX = "xmp"+ NAMESPACE_PREFIX_DELIMITER;
 
-    public static String PDI_PREFIX = PDF.PDF_PREFIX + "pdi" + NAMESPACE_PREFIX_DELIMITER;
+    public static String PDI_PREFIX = "pdi" + NAMESPACE_PREFIX_DELIMITER;
     /**
      * Use this to store parse exception information in the Metadata object.
      */

@@ -44,7 +44,7 @@ public class ReadCSV {
                 targetUser.setDisplayName(country[1]);
                 targetUser.setArchiveCode(country[2]);
                 tul.addTargetUser((TargetUser) targetUser);
-                log.info("Recipient [code= " + country[1] + " , name=" + country[2] + "]");
+                log.debug("Recipient [code= " + country[1] + " , name=" + country[2] + "]");
 
             }
 
@@ -79,7 +79,7 @@ public class ReadCSV {
                 newCompany.setArchiveCode(country[2]);
                 acl.addCompany((ApprovedCompany) newCompany);
 
-                log.info("Companyname [code= " + country[1] + " , name=" + country[2] + "]");
+                log.debug("Companyname [code= " + country[1] + " , name=" + country[2] + "]");
 
             }
 
