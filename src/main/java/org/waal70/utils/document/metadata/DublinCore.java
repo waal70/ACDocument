@@ -186,5 +186,11 @@ public interface DublinCore {
      */
 	Property TYPE = Property.internalText(
     		PREFIX_DC + ACCoreProperties.NAMESPACE_PREFIX_DELIMITER + "type");
+	
+	/**
+     * A class of entity for whom the resource is intended or useful.
+     */
+	Property AUDIENCE = Property.internalText(
+			PREFIX_DC + ACCoreProperties.NAMESPACE_PREFIX_DELIMITER + "audience");
 
 }

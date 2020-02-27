@@ -25,6 +25,7 @@ import org.apache.xmpbox.type.BadFieldValueException;
 import org.apache.xmpbox.xml.XmpSerializer;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.convenience.DateUtils;
+import org.waal70.utils.document.metadata.DublinCore;
 import org.waal70.utils.document.metadata.Metadata;
 
 import com.adobe.internal.xmp.XMPException;
@@ -173,8 +174,11 @@ public class PDFMetaDataWriter {
 		//Guaranteed values:
 		dublinCoreSchema.setTitle(md.get(localPrefix + DublinCoreSchema.TITLE));
 		dublinCoreSchema.addCreator(md.get(localPrefix + DublinCoreSchema.CREATOR));
+		//dublinCoreSchema.createTextType(Metadata.CREATED, md.get)
 		dublinCoreSchema.setDescription(md.get(localPrefix + DublinCoreSchema.DESCRIPTION));
 		dublinCoreSchema.addSubject(md.get(localPrefix + DublinCoreSchema.SUBJECT) != null ? md.get(localPrefix + DublinCoreSchema.SUBJECT) : ""  );
+		
+		
 		
 		String curval = null;
 		//Non guaranteed:
