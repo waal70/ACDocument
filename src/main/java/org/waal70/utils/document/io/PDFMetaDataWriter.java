@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.xml.transform.TransformerException;
 
@@ -25,7 +26,6 @@ import org.apache.xmpbox.type.BadFieldValueException;
 import org.apache.xmpbox.xml.XmpSerializer;
 import org.waal70.utils.document.ACDocument;
 import org.waal70.utils.document.convenience.DateUtils;
-import org.waal70.utils.document.metadata.DublinCore;
 import org.waal70.utils.document.metadata.Metadata;
 
 import com.adobe.internal.xmp.XMPException;
@@ -133,7 +133,11 @@ public class PDFMetaDataWriter {
 		info.setCreationDate(c);
 		
 		//ModDate:
-		c.setTime(du.tryToParse(md.get(Metadata.PDI_PREFIX+"ModDate")));
+		//If ModDate is not there, take today's date:
+		String modDate = md.get(Metadata.PDI_PREFIX+"ModDate");
+		if (modDate == null)
+			modDate = DateUtils.formatDate(new Date());
+		c.setTime(du.tryToParse(modDate));
 		info.setModificationDate(c);
 		
 		//deprecated properties:
