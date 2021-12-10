@@ -32,6 +32,7 @@ public class Main {
 		// TODO: Handle displayname and category name for companies and users
 		// TODO: add default users (NOBODY and ALL)
 		log.debug("Started the program. Handing over to GUI: "); //$NON-NLS-1$
+		log.info("Version that Log4J is on: " + log.getClass().getPackage().getImplementationVersion());
 
 		doGUI();
 	}
