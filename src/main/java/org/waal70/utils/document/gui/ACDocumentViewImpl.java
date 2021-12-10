@@ -5,6 +5,7 @@ import java.awt.FocusTraversalPolicy;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.image.BufferedImage;
 import java.text.SimpleDateFormat;
@@ -17,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -194,6 +196,14 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     	        controller.dateChanged((Date)txtTargetDated.getValue());
 			}
         });
+        
+        
+        ///ANDRE 10-12-2021: select whole field on focus
+        javax.swing.JFormattedTextField jftf = ((JSpinner.DefaultEditor) txtTargetDated.getEditor()).getTextField();
+        jftf.addFocusListener(fcsListener);
+        ////END ANDRE
+        
+        
         //txtTargetDated.setFocusCycleRoot(true);
 /////BLOCK FOR TARGET DATE       
         
@@ -381,6 +391,7 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
         
         pack();
         this.getFrame().setFocusTraversalPolicy(newPolicy);
+        
         log.debug("View after pack()"); //$NON-NLS-1$
     }// </editor-fold>//GEN-END:initComponents                      
 
@@ -606,6 +617,33 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
 		txtSubject.setText(text);
 		
 	}
+	
+	//ANDRE 10-12-2021: Need focus listener for select all
+	private FocusListener fcsListener = new FocusListener() {
+        
+		@Override
+        public void focusGained(FocusEvent e) {
+            setSelectAll(e);
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            setSelectAll(e);
+        }
+
+        private void setSelectAll(FocusEvent e) {
+            log.info("Setting select all on  : " + e.getComponent().getName());
+            final Component c = e.getComponent();
+            SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((javax.swing.JTextField) c).setText(((javax.swing.JTextField) c).getText());
+                        ((javax.swing.JTextField) c).selectAll();
+                    }
+                });
+           }
+      };
+      ///ANDRE END need focuslistener
 
 
 

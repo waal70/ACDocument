@@ -114,6 +114,7 @@ public class ACDocumentControllerImpl implements ACDocumentController, ActionLis
 		
 		view.setSubject("");
 		
+	
 		//view.setTargetDated(new Date());
 		
 		//IMPORTANT: populate the combo's before setting the
