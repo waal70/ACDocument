@@ -415,7 +415,8 @@ public class ACDocumentViewImpl extends java.awt.Frame implements ACDocumentView
     private javax.swing.JLabel lblType;
     private javax.swing.JPanel panelActions;
     private javax.swing.JPanel panelArchive;
-    private javax.swing.JScrollPane panelPDF;
+    @SuppressWarnings("unused")
+	private javax.swing.JScrollPane panelPDF;
     private javax.swing.JPanel panelScan;
     private javax.swing.JTextField txtFileName;
     private javax.swing.JTextField txtFileSize;
