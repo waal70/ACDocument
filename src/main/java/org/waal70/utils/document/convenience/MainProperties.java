@@ -43,7 +43,7 @@ public class MainProperties {
 			return dirname;
 		else {
 			if (System.getProperty("os.name").startsWith("Windows"))
-				dirname = "C:\\pdf\\";
+				dirname = "Z:\\SCANS\\";
 			else
 				dirname = "/Users/awaal/TEMP/PDF/";
 			return dirname;
@@ -61,7 +61,7 @@ public class MainProperties {
 		if (dirname.contains(File.separator))
 			return dirname;
 		if (System.getProperty("os.name").startsWith("Windows"))
-			dirname = "C:\\pdf\\";
+			dirname = "Z:\\SCANS\\";
 		else
 			dirname = "/Users/awaal/TEMP/PDF/";
 		return dirname;

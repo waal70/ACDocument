@@ -195,24 +195,28 @@ import org.apache.logging.log4j.Logger;
 	     * @return
 	     */
 	    public Date tryToParse(String dateString) {
-	        // Java doesn't like timezones in the form ss+hh:mm
-	        // It only likes the hhmm form, without the colon
+	    	// Java doesn't like timezones in the form ss+hh:mm
+	    	// It only likes the hhmm form, without the colon
+	    	if (dateString != null)
+	    	{
+	    		int n = dateString.length();
+	    		if (dateString.startsWith("D:"))
+	    			dateString = dateString.substring(2, n);
+	    		if (dateString.charAt(n - 3) == ':'
+	    				&& (dateString.charAt(n - 6) == '+' || dateString.charAt(n - 6) == '-')) {
+	    			dateString = dateString.substring(0, n - 3) + dateString.substring(n - 2);
+	    		}
 
-	        int n = dateString.length();
-	    	if (dateString.startsWith("D:"))
-	    		dateString = dateString.substring(2, n);
-	        if (dateString.charAt(n - 3) == ':'
-	                && (dateString.charAt(n - 6) == '+' || dateString.charAt(n - 6) == '-')) {
-	            dateString = dateString.substring(0, n - 3) + dateString.substring(n - 2);
-	        }
 
-	        for (DateFormat df : iso8601InputFormats) {
-	            try {
-	                return df.parse(dateString);
-	            } catch (java.text.ParseException e){
+	    		for (DateFormat df : iso8601InputFormats) {
+	    			try {
+	    				return df.parse(dateString);
+	    			} catch (java.text.ParseException e){
 
-	            }
-	        }
-	        return null;
+	    			}
+	    		}
+	    	}
+	    	return null;
+
 	    }
 	}

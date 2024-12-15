@@ -129,7 +129,11 @@ public class PDFMetaDataWriter {
 		DateUtils du = new DateUtils();
 		Calendar c = Calendar.getInstance();
 		//CreationDate
-		c.setTime(du.tryToParse(md.get(Metadata.PDI_PREFIX+"CreationDate")));
+		// if creationDate returns empty, take today's date
+		String creationDate = md.get(Metadata.PDI_PREFIX+"CreationDate");
+		if (creationDate == null)
+			creationDate = DateUtils.formatDate(new Date());
+		c.setTime(du.tryToParse(creationDate));
 		info.setCreationDate(c);
 		
 		//ModDate:
